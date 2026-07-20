@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { ThemeToggle } from "./ThemeToggle";
 import { LanguageToggle } from "./LanguageToggle";
+import { WikiSwitcher } from "./WikiSwitcher";
 import { useLanguage } from "@/context/LanguageContext";
 
 type WikiSummary = { id: string; title: string };
@@ -13,7 +14,6 @@ type WikiSummary = { id: string; title: string };
 export function TopBar() {
   const { data: session, status } = useSession();
   const { t } = useLanguage();
-  const router = useRouter();
   const params = useParams<{ wikiId?: string }>();
   const [wikis, setWikis] = useState<WikiSummary[]>([]);
 
@@ -38,17 +38,7 @@ export function TopBar() {
           Aster
         </Link>
         {params.wikiId && wikis.length > 0 && (
-          <select
-            value={params.wikiId}
-            onChange={(e) => router.push(`/w/${e.target.value}`)}
-            className="rounded border border-neutral-300 bg-transparent px-2 py-1 text-sm dark:border-neutral-700"
-          >
-            {wikis.map((w) => (
-              <option key={w.id} value={w.id}>
-                {w.title}
-              </option>
-            ))}
-          </select>
+          <WikiSwitcher wikis={wikis} currentWikiId={params.wikiId} />
         )}
       </div>
       <div className="flex items-center gap-3 text-sm">

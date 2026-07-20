@@ -38,7 +38,21 @@ export default function DocumentPage() {
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [notFound, setNotFound] = useState(false);
   const [previewing, setPreviewing] = useState(false);
+  const [wide, setWide] = useState(false);
   const loading = !notFound && (!doc || doc.id !== docId);
+
+  useEffect(() => {
+    const stored = window.localStorage.getItem("aster-content-width");
+    if (stored === "wide") Promise.resolve().then(() => setWide(true));
+  }, []);
+
+  function toggleWide() {
+    setWide((prev) => {
+      const next = !prev;
+      window.localStorage.setItem("aster-content-width", next ? "wide" : "normal");
+      return next;
+    });
+  }
 
   useEffect(() => {
     fetch(`/api/documents/${docId}`)
@@ -145,7 +159,7 @@ export default function DocumentPage() {
   const editingMode = doc.isOwner && !previewing;
 
   return (
-    <div className="mx-auto max-w-3xl px-8 py-8">
+    <div className={`mx-auto px-8 py-8 ${wide ? "max-w-6xl" : "max-w-3xl"}`}>
       <Breadcrumb docId={doc.id} />
 
       <div className="mb-4 flex items-start justify-between gap-4">
@@ -160,24 +174,32 @@ export default function DocumentPage() {
         ) : (
           <h1 className="flex-1 text-3xl font-bold">{doc.title}</h1>
         )}
-        {doc.isOwner && (
-          <div className="flex shrink-0 items-center gap-3">
-            <button
-              onClick={() => setPreviewing((v) => !v)}
-              className="text-sm text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200"
-            >
-              {previewing ? t("doc.backToEdit") : t("doc.preview")}
-            </button>
-            {editingMode && (
+        <div className="flex shrink-0 items-center gap-3">
+          <button
+            onClick={toggleWide}
+            className="text-sm text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200"
+          >
+            {wide ? t("doc.normal") : t("doc.wide")}
+          </button>
+          {doc.isOwner && (
+            <>
               <button
-                onClick={() => setConfirmingDelete(true)}
-                className="text-sm text-neutral-400 hover:text-red-500"
+                onClick={() => setPreviewing((v) => !v)}
+                className="text-sm text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200"
               >
-                {t("doc.delete")}
+                {previewing ? t("doc.backToEdit") : t("doc.preview")}
               </button>
-            )}
-          </div>
-        )}
+              {editingMode && (
+                <button
+                  onClick={() => setConfirmingDelete(true)}
+                  className="text-sm text-neutral-400 hover:text-red-500"
+                >
+                  {t("doc.delete")}
+                </button>
+              )}
+            </>
+          )}
+        </div>
       </div>
 
       {editingMode && (

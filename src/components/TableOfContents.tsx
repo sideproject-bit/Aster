@@ -1,0 +1,60 @@
+"use client";
+
+import { useState, type RefObject } from "react";
+import type { HeadingEntry } from "@/lib/toc";
+
+type Props = {
+  headings: HeadingEntry[];
+  containerRef: RefObject<HTMLDivElement | null>;
+};
+
+export function TableOfContents({ headings, containerRef }: Props) {
+  const [expanded, setExpanded] = useState(true);
+
+  if (headings.length < 2) return null;
+
+  const minLevel = Math.min(...headings.map((h) => h.level));
+  const counters: number[] = [];
+
+  function numberFor(level: number): string {
+    const depth = level - minLevel;
+    counters.length = depth + 1;
+    counters[depth] = (counters[depth] ?? 0) + 1;
+    return counters.slice(0, depth + 1).join(".");
+  }
+
+  function scrollTo(index: number) {
+    const el = containerRef.current?.querySelectorAll("h1, h2, h3, h4, h5, h6")[index];
+    el?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  return (
+    <div className="mb-6 rounded-lg border border-neutral-200 dark:border-neutral-800">
+      <button
+        type="button"
+        onClick={() => setExpanded((v) => !v)}
+        className="flex w-full items-center justify-between px-4 py-2 text-sm font-medium"
+      >
+        목차
+        <span className="text-xs font-normal text-neutral-400">
+          {expanded ? "접기" : "펼치기"}
+        </span>
+      </button>
+      {expanded && (
+        <ol className="space-y-1 px-4 pb-3 text-sm">
+          {headings.map((h, i) => (
+            <li key={i} style={{ paddingLeft: (h.level - minLevel) * 16 }}>
+              <button
+                type="button"
+                onClick={() => scrollTo(i)}
+                className="text-left text-blue-600 hover:underline dark:text-blue-400"
+              >
+                {numberFor(h.level)}. {h.text}
+              </button>
+            </li>
+          ))}
+        </ol>
+      )}
+    </div>
+  );
+}

@@ -1,0 +1,75 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
+import Link from "next/link";
+import { ThemeToggle } from "./ThemeToggle";
+
+type WikiSummary = { id: string; title: string };
+
+export function TopBar() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const params = useParams<{ wikiId?: string }>();
+  const [wikis, setWikis] = useState<WikiSummary[]>([]);
+
+  useEffect(() => {
+    if (status !== "authenticated") return;
+    fetch("/api/wikis")
+      .then((res) => res.json())
+      .then(setWikis);
+  }, [status]);
+
+  return (
+    <header className="flex h-12 shrink-0 items-center justify-between border-b border-neutral-200 px-4 dark:border-neutral-800">
+      <div className="flex items-center gap-3">
+        {/* Swap for the actual logo files once available: an <img> pair at
+            /logo-black.png (light mode) and /logo-yellow.png (dark mode). */}
+        <Link
+          href={status === "authenticated" ? "/wikis" : "/"}
+          className="flex items-center gap-1.5 font-semibold"
+        >
+          <span className="h-2.5 w-2.5 rounded-full bg-brand" aria-hidden />
+          Aster
+        </Link>
+        {params.wikiId && wikis.length > 0 && (
+          <select
+            value={params.wikiId}
+            onChange={(e) => router.push(`/w/${e.target.value}`)}
+            className="rounded border border-neutral-300 bg-transparent px-2 py-1 text-sm dark:border-neutral-700"
+          >
+            {wikis.map((w) => (
+              <option key={w.id} value={w.id}>
+                {w.title}
+              </option>
+            ))}
+          </select>
+        )}
+      </div>
+      <div className="flex items-center gap-3 text-sm">
+        <ThemeToggle />
+        {status === "authenticated" && session?.user ? (
+          <>
+            <span className="text-neutral-500">{session.user.email}</span>
+            <button
+              onClick={() => signOut({ callbackUrl: "/" })}
+              className="text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200"
+            >
+              로그아웃
+            </button>
+          </>
+        ) : status === "unauthenticated" ? (
+          <>
+            <Link href="/login" className="text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200">
+              로그인
+            </Link>
+            <Link href="/signup" className="text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200">
+              회원가입
+            </Link>
+          </>
+        ) : null}
+      </div>
+    </header>
+  );
+}

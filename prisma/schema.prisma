@@ -1,0 +1,86 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id              String             @id @default(cuid())
+  email           String             @unique
+  passwordHash    String
+  name            String?
+  wikis           Wiki[]
+  collaboratingOn WikiCollaborator[]
+  createdAt       DateTime           @default(now())
+}
+
+model Wiki {
+  id            String             @id @default(cuid())
+  title         String
+  ownerId       String
+  owner         User               @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  isPublic      Boolean            @default(false)
+  documents     Document[]
+  tags          Tag[]
+  collaborators WikiCollaborator[]
+  createdAt     DateTime           @default(now())
+}
+
+// A co-author with full content edit rights (documents/tags/uploads), but not
+// wiki-level management (rename/delete/public-toggle/collaborator list — owner only).
+model WikiCollaborator {
+  id        String   @id @default(cuid())
+  wikiId    String
+  wiki      Wiki     @relation(fields: [wikiId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([wikiId, userId])
+}
+
+model Document {
+  id        String     @id @default(cuid())
+  wikiId    String
+  wiki      Wiki       @relation(fields: [wikiId], references: [id], onDelete: Cascade)
+  parentId  String?
+  parent    Document?  @relation("DocTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children  Document[] @relation("DocTree")
+  title     String
+  slug      String
+  content   Json // Tiptap JSON document
+  status    Status     @default(DRAFT)
+  isPublic  Boolean    @default(false)
+  order     Int        @default(0)
+  isFolder  Boolean    @default(false)
+  tags      Tag[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@unique([wikiId, slug])
+}
+
+model Tag {
+  id        String     @id @default(cuid())
+  wikiId    String
+  wiki      Wiki       @relation(fields: [wikiId], references: [id], onDelete: Cascade)
+  name      String
+  color     String
+  documents Document[]
+  createdAt DateTime   @default(now())
+
+  @@unique([wikiId, name])
+}
+
+enum Status {
+  DRAFT
+  PUBLISHED
+}

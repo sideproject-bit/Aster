@@ -27,8 +27,19 @@ export const dictionaries: Record<Lang, Record<string, string>> = {
     "topbar.login": "Log in",
     "topbar.signup": "Sign up",
     "topbar.logout": "Log out",
-    "topbar.viewAllWikis": "All my wikis",
-    "topbar.newWiki": "New wiki",
+    "topbar.viewAllWikis": "All my records",
+    "topbar.newWiki": "New record",
+
+    "account.title": "Account",
+    "account.dangerZoneTitle": "Danger zone",
+    "account.deleteAccount": "Delete account",
+    "account.deleteWarning":
+      "Deleting your account permanently removes every record you own, all documents inside them, and your access to any record you collaborate on. This cannot be undone.",
+    "account.deleteConfirmStep1": "Are you sure you want to delete your account? This cannot be undone.",
+    "account.continue": "Continue",
+    "account.typeEmailPrompt": "Type your email address to confirm: {email}",
+    "account.deleteButton": "Permanently delete my account",
+    "account.deleting": "Deleting…",
 
     "auth.login.title": "Log in",
     "auth.login.button": "Log in",
@@ -48,11 +59,11 @@ export const dictionaries: Record<Lang, Record<string, string>> = {
     "auth.error.passwordTooShort": "Password must be at least 8 characters",
     "auth.error.emailTaken": "This email is already registered",
 
-    "dashboard.myWikis": "My Wikis",
-    "dashboard.newWiki": "New Wiki",
-    "dashboard.newWikiPrompt": "New wiki name",
-    "dashboard.renamePrompt": "Rename wiki",
-    "dashboard.noWikisYet": 'No wikis yet. Click "New Wiki" to start.',
+    "dashboard.myWikis": "My Records",
+    "dashboard.newWiki": "New Record",
+    "dashboard.newWikiPrompt": "New record name",
+    "dashboard.renamePrompt": "Rename record",
+    "dashboard.noWikisYet": 'No records yet. Click "New Record" to start.',
     "dashboard.loading": "Loading…",
     "dashboard.docsCount": "{count} docs",
     "dashboard.public": "Public",
@@ -75,7 +86,7 @@ export const dictionaries: Record<Lang, Record<string, string>> = {
     "collab.add": "Add",
     "collab.error.generic": "Couldn't add collaborator",
     "collab.error.userNotFound": "No account found for this email",
-    "collab.error.alreadyOwner": "This user already owns the wiki",
+    "collab.error.alreadyOwner": "This user already owns the record",
 
     "sidebar.documents": "Documents",
     "sidebar.newFolder": "New folder",
@@ -99,12 +110,12 @@ export const dictionaries: Record<Lang, Record<string, string>> = {
     "sidebar.deleteFolderConfirm":
       'Delete folder "{title}"? Its sub-items will move up a level.',
 
-    "wikiHome.title": "My Wiki",
+    "wikiHome.title": "My Record",
     "wikiHome.ownerHint": 'Create a new document with the "+" button on the left, or pick one from the list below.',
     "wikiHome.viewerHint": "Pick a document from the list below.",
 
     "wikiLayout.noAccessTitle": "Access denied",
-    "wikiLayout.noAccessBody": "This wiki is private or doesn't exist.",
+    "wikiLayout.noAccessBody": "This record is private or doesn't exist.",
 
     "graph.title": "Document Graph",
     "graph.empty": "No documents yet.",
@@ -197,12 +208,14 @@ export const dictionaries: Record<Lang, Record<string, string>> = {
 
     "demoWiki.title": "Getting Started with Aster",
     "demoWiki.templatesFolder": "Templates",
-    "demoWiki.welcomeTitle": "Welcome to Aster",
+    "demoWiki.welcomeFolder": "Welcome",
+    "demoWiki.welcomeTitleEn": "(Eng)Welcome to Aster",
+    "demoWiki.welcomeTitleKo": "(Kor)Welcome to Aster",
     "demoWiki.crossLinkPrefix": "New here? ",
     "demoWiki.crossLinkSuffix": ".",
 
     "demoWiki.intro":
-      "Aster is a place to write documents that link to each other, so your notes build into a connected wiki instead of a pile of separate pages. This page walks through what you can do — feel free to edit or delete any of it, it's yours.",
+      "Aster is a place to write documents that link to each other, so your notes build into a connected record instead of a pile of separate pages. This page walks through what you can do — feel free to edit or delete any of it, it's yours.",
     "demoWiki.formattingTitle": "Writing & formatting",
     "demoWiki.formattingLinkBody":
       "Type [[ anywhere to search for or create another document — the link at the top of this page is a live example. Add a pipe to customize the link text, like [[Document Name|see an example.",
@@ -217,21 +230,21 @@ export const dictionaries: Record<Lang, Record<string, string>> = {
     "demoWiki.organizingBullet2": "Tags with colors, so related documents are easy to spot at a glance",
     "demoWiki.organizingBullet3": "Draft vs. Published status — drafts stay private until you're ready",
     "demoWiki.organizingBullet4":
-      '"Share via link" makes a published document visible to anyone with the link, without making your whole wiki public',
+      '"Share via link" makes a published document visible to anyone with the link, without making your whole record public',
     "demoWiki.navTitle": "Getting around",
     "demoWiki.navTocBody":
       "Any document with two or more headings gets an automatic, numbered table of contents (see the top of this page) that you can fold section by section.",
     "demoWiki.navGraphBody": "The graph view (in the sidebar) shows how your documents connect to each other.",
-    "demoWiki.multiWikiTitle": "Multiple wikis & collaborators",
+    "demoWiki.multiWikiTitle": "Multiple records & collaborators",
     "demoWiki.multiWikiBody1":
-      "One account can hold as many wikis as you want — switch between them or start a new one from the dropdown next to the Aster logo at the top.",
+      "One account can hold as many records as you want — switch between them or start a new one from the dropdown next to the Aster logo at the top.",
     "demoWiki.multiWikiBody2":
-      "Invite someone as a collaborator (by email) to co-edit a wiki with you. Only the owner can delete the wiki, change who can see it, or manage collaborators.",
+      "Invite someone as a collaborator (by email) to co-edit a record with you. Only the owner can delete the record, change who can see it, or manage collaborators.",
     "demoWiki.interfaceTitle": "Interface",
     "demoWiki.interfaceBody":
       "Use the Language and Mode buttons in the top right to switch between English/Korean and light/dark/system, and the width toggle next to a document's title to widen the page.",
     "demoWiki.usesTitle": "Ways to use a site like this",
-    "demoWiki.usesBullet1": "A running project wiki — goals, decisions, and status in one place",
+    "demoWiki.usesBullet1": "A running project record — goals, decisions, and status in one place",
     "demoWiki.usesBullet2": "An archive of meeting notes you can actually search back through",
     "demoWiki.usesBullet3": "Study notes organized by course or topic, linked to related ideas",
     "demoWiki.usesBullet4": "A personal knowledge base that grows more useful as pages link together",
@@ -295,8 +308,19 @@ export const dictionaries: Record<Lang, Record<string, string>> = {
     "topbar.login": "로그인",
     "topbar.signup": "회원가입",
     "topbar.logout": "로그아웃",
-    "topbar.viewAllWikis": "내 위키 목록",
-    "topbar.newWiki": "새 위키",
+    "topbar.viewAllWikis": "내 기록 목록",
+    "topbar.newWiki": "새 기록",
+
+    "account.title": "계정",
+    "account.dangerZoneTitle": "위험 구역",
+    "account.deleteAccount": "계정 삭제",
+    "account.deleteWarning":
+      "계정을 삭제하면 소유한 모든 기록과 그 안의 문서, 그리고 공동 작성 중인 기록에 대한 접근 권한이 영구히 사라집니다. 되돌릴 수 없습니다.",
+    "account.deleteConfirmStep1": "정말로 계정을 삭제하시겠어요? 되돌릴 수 없습니다.",
+    "account.continue": "계속",
+    "account.typeEmailPrompt": "확인을 위해 이메일 주소를 입력하세요: {email}",
+    "account.deleteButton": "계정 영구 삭제",
+    "account.deleting": "삭제 중…",
 
     "auth.login.title": "로그인",
     "auth.login.button": "로그인",
@@ -316,11 +340,11 @@ export const dictionaries: Record<Lang, Record<string, string>> = {
     "auth.error.passwordTooShort": "비밀번호는 8자 이상이어야 합니다",
     "auth.error.emailTaken": "이미 가입된 이메일입니다",
 
-    "dashboard.myWikis": "내 위키",
-    "dashboard.newWiki": "새 위키",
-    "dashboard.newWikiPrompt": "새 위키 이름",
-    "dashboard.renamePrompt": "위키 이름 변경",
-    "dashboard.noWikisYet": '아직 위키가 없습니다. "새 위키" 버튼으로 시작하세요.',
+    "dashboard.myWikis": "내 기록",
+    "dashboard.newWiki": "새 기록",
+    "dashboard.newWikiPrompt": "새 기록 이름",
+    "dashboard.renamePrompt": "기록 이름 변경",
+    "dashboard.noWikisYet": '아직 기록이 없습니다. "새 기록" 버튼으로 시작하세요.',
     "dashboard.loading": "불러오는 중…",
     "dashboard.docsCount": "문서 {count}개",
     "dashboard.public": "공개",
@@ -330,10 +354,10 @@ export const dictionaries: Record<Lang, Record<string, string>> = {
     "dashboard.makePublic": "공개로",
     "dashboard.rename": "이름변경",
     "dashboard.delete": "삭제",
-    "dashboard.deleteConfirm": '"{title}" 위키를 삭제할까요? 안의 모든 문서가 함께 삭제됩니다.',
-    "dashboard.collaboratingWikis": "공동 작성 중인 위키",
+    "dashboard.deleteConfirm": '"{title}" 기록을 삭제할까요? 안의 모든 문서가 함께 삭제됩니다.',
+    "dashboard.collaboratingWikis": "공동 작성 중인 기록",
     "dashboard.leave": "나가기",
-    "dashboard.leaveConfirm": '"{title}" 위키의 공동 작성자에서 나갈까요?',
+    "dashboard.leaveConfirm": '"{title}" 기록의 공동 작성자에서 나갈까요?',
 
     "collab.title": "공동 작성자",
     "collab.loading": "불러오는 중…",
@@ -343,7 +367,7 @@ export const dictionaries: Record<Lang, Record<string, string>> = {
     "collab.add": "추가",
     "collab.error.generic": "추가에 실패했습니다",
     "collab.error.userNotFound": "가입된 계정이 없는 이메일입니다",
-    "collab.error.alreadyOwner": "이미 이 위키의 소유자입니다",
+    "collab.error.alreadyOwner": "이미 이 기록의 소유자입니다",
 
     "sidebar.documents": "문서",
     "sidebar.newFolder": "새 폴더",
@@ -365,12 +389,12 @@ export const dictionaries: Record<Lang, Record<string, string>> = {
     "sidebar.deleteDocConfirm": '"{title}" 문서를 삭제할까요? 하위 항목은 상위로 이동합니다.',
     "sidebar.deleteFolderConfirm": '"{title}" 폴더를 삭제할까요? 하위 항목은 상위로 이동합니다.',
 
-    "wikiHome.title": "내 위키",
+    "wikiHome.title": "내 기록",
     "wikiHome.ownerHint": "왼쪽 사이드바의 + 버튼으로 새 문서를 만들거나, 아래 목록에서 문서를 선택하세요.",
     "wikiHome.viewerHint": "아래 목록에서 문서를 선택하세요.",
 
     "wikiLayout.noAccessTitle": "접근할 수 없습니다",
-    "wikiLayout.noAccessBody": "비공개 위키이거나 존재하지 않는 위키입니다.",
+    "wikiLayout.noAccessBody": "비공개 기록이거나 존재하지 않는 기록입니다.",
 
     "graph.title": "문서 연동 그래프",
     "graph.empty": "아직 문서가 없습니다.",
@@ -463,12 +487,14 @@ export const dictionaries: Record<Lang, Record<string, string>> = {
 
     "demoWiki.title": "Aster 사용 설명서",
     "demoWiki.templatesFolder": "템플릿",
-    "demoWiki.welcomeTitle": "Aster에 오신 것을 환영합니다",
+    "demoWiki.welcomeFolder": "Welcome",
+    "demoWiki.welcomeTitleEn": "(Eng)Welcome to Aster",
+    "demoWiki.welcomeTitleKo": "(Kor)Welcome to Aster",
     "demoWiki.crossLinkPrefix": "영어로 보고 싶으신가요? ",
     "demoWiki.crossLinkSuffix": ".",
 
     "demoWiki.intro":
-      "Aster는 문서끼리 서로 연결되는 위키를 쓰는 공간이에요. 그래서 메모가 낱개로 흩어지지 않고 하나의 연결된 위키로 쌓여가죠. 이 페이지는 무엇을 할 수 있는지 보여드려요 — 자유롭게 수정하거나 삭제해도 괜찮아요, 여러분 거니까요.",
+      "Aster는 문서끼리 서로 연결되는 기록을 쓰는 공간이에요. 그래서 메모가 낱개로 흩어지지 않고 하나의 연결된 기록으로 쌓여가죠. 이 페이지는 무엇을 할 수 있는지 보여드려요 — 자유롭게 수정하거나 삭제해도 괜찮아요, 여러분 거니까요.",
     "demoWiki.formattingTitle": "글쓰기와 서식",
     "demoWiki.formattingLinkBody":
       "어디서든 [[ 를 입력하면 다른 문서를 검색하거나 새로 만들 수 있어요 — 이 페이지 맨 위의 링크가 실제 예시예요. 파이프(|)를 추가하면 [[문서 이름|이렇게 링크 텍스트를 바꿀 수도 있어요.",
@@ -482,21 +508,21 @@ export const dictionaries: Record<Lang, Record<string, string>> = {
     "demoWiki.organizingBullet2": "색상이 있는 태그로 관련 문서를 한눈에 구분",
     "demoWiki.organizingBullet3": "임시저장/작성완료 상태 — 준비될 때까지 초안은 비공개로 유지",
     "demoWiki.organizingBullet4":
-      '"링크로 공개"를 켜면 위키 전체를 공개하지 않고도 해당 문서만 링크가 있는 사람에게 보여줄 수 있어요',
+      '"링크로 공개"를 켜면 기록 전체를 공개하지 않고도 해당 문서만 링크가 있는 사람에게 보여줄 수 있어요',
     "demoWiki.navTitle": "탐색하기",
     "demoWiki.navTocBody":
       "제목이 두 개 이상인 문서에는 자동으로 번호가 매겨진 목차가 생기고(이 페이지 맨 위 참고), 섹션별로 접을 수 있어요.",
     "demoWiki.navGraphBody": "사이드바의 그래프 보기에서 문서끼리 어떻게 연결되어 있는지 볼 수 있어요.",
-    "demoWiki.multiWikiTitle": "여러 위키와 공동 작성자",
+    "demoWiki.multiWikiTitle": "여러 기록과 공동 작성자",
     "demoWiki.multiWikiBody1":
-      "한 계정으로 원하는 만큼 위키를 만들 수 있어요 — 상단 Aster 로고 옆 드롭다운에서 위키를 전환하거나 새로 시작할 수 있어요.",
+      "한 계정으로 원하는 만큼 기록을 만들 수 있어요 — 상단 Aster 로고 옆 드롭다운에서 기록을 전환하거나 새로 시작할 수 있어요.",
     "demoWiki.multiWikiBody2":
-      "이메일로 공동 작성자를 초대해서 함께 편집할 수 있어요. 위키 삭제, 공개 설정 변경, 공동 작성자 관리는 소유자만 할 수 있어요.",
+      "이메일로 공동 작성자를 초대해서 함께 편집할 수 있어요. 기록 삭제, 공개 설정 변경, 공동 작성자 관리는 소유자만 할 수 있어요.",
     "demoWiki.interfaceTitle": "인터페이스",
     "demoWiki.interfaceBody":
       "오른쪽 위의 언어/모드 버튼으로 한국어/영어, 라이트/다크/시스템을 전환할 수 있고, 문서 제목 옆의 너비 버튼으로 화면을 넓게 쓸 수도 있어요.",
     "demoWiki.usesTitle": "이런 용도로 활용해보세요",
-    "demoWiki.usesBullet1": "진행 중인 프로젝트 위키 — 목표, 결정 사항, 진행 상태를 한곳에",
+    "demoWiki.usesBullet1": "진행 중인 프로젝트 기록 — 목표, 결정 사항, 진행 상태를 한곳에",
     "demoWiki.usesBullet2": "나중에 다시 찾아볼 수 있는 회의록 아카이브",
     "demoWiki.usesBullet3": "과목이나 주제별로 정리하고 서로 연결한 공부 노트",
     "demoWiki.usesBullet4": "페이지가 연결될수록 점점 유용해지는 개인 지식 베이스",

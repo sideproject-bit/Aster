@@ -158,10 +158,10 @@ function crossLinkParagraph(lang: Lang, targetId: string, targetTitle: string): 
   ]);
 }
 
-// Builds an example wiki (auto-created on signup): a Templates folder with three
-// starter documents (in the signer's language) and a pair of cross-linked "Welcome to
-// Aster" documents — one English, one Korean — regardless of signup language, so the
-// wikilink at the top of each is also a live example of the feature.
+// Builds an example record (auto-created on signup): a Templates folder with three
+// starter documents (in the signer's language), and a Welcome folder holding a pair of
+// cross-linked "Welcome to Aster" documents — one English, one Korean — regardless of
+// signup language, so the wikilink at the top of each is also a live example of the feature.
 export async function createDemoWiki(ownerId: string, lang: Lang) {
   const t = (key: string) => translate(lang, key);
 
@@ -217,10 +217,23 @@ export async function createDemoWiki(ownerId: string, lang: Lang) {
     },
   });
 
-  const enTitle = translate("en", "demoWiki.welcomeTitle");
+  const welcomeFolderTitle = t("demoWiki.welcomeFolder");
+  const welcomeFolder = await prisma.document.create({
+    data: {
+      wikiId: wiki.id,
+      title: welcomeFolderTitle,
+      slug: slugify(welcomeFolderTitle),
+      isFolder: true,
+      status: "PUBLISHED",
+      content: EMPTY_DOC,
+    },
+  });
+
+  const enTitle = translate("en", "demoWiki.welcomeTitleEn");
   const enDoc = await prisma.document.create({
     data: {
       wikiId: wiki.id,
+      parentId: welcomeFolder.id,
       title: enTitle,
       slug: slugify(enTitle),
       status: "PUBLISHED",
@@ -228,10 +241,11 @@ export async function createDemoWiki(ownerId: string, lang: Lang) {
     },
   });
 
-  const koTitle = translate("ko", "demoWiki.welcomeTitle");
+  const koTitle = translate("ko", "demoWiki.welcomeTitleKo");
   const koDoc = await prisma.document.create({
     data: {
       wikiId: wiki.id,
+      parentId: welcomeFolder.id,
       title: koTitle,
       slug: slugify(koTitle),
       status: "PUBLISHED",

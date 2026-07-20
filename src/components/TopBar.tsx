@@ -46,7 +46,9 @@ export function TopBar() {
         <ThemeToggle />
         {status === "authenticated" && session?.user ? (
           <>
-            <span className="text-neutral-500">{session.user.email}</span>
+            <Link href="/account" className="text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200">
+              {session.user.email}
+            </Link>
             <button
               onClick={() => signOut({ callbackUrl: "/" })}
               className="text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200"

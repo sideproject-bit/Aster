@@ -2,27 +2,39 @@
 
 import { NodeViewWrapper, type NodeViewProps } from "@tiptap/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDocuments } from "@/context/DocumentsContext";
 import { useLanguage } from "@/context/LanguageContext";
 
-export function WikiLinkView({ node, updateAttributes }: NodeViewProps) {
+export function WikiLinkView({ node, editor, updateAttributes }: NodeViewProps) {
   const router = useRouter();
   const { wikiId, isOwner, refresh } = useDocuments();
   const { t } = useLanguage();
   const [creating, setCreating] = useState(false);
+  const [editable, setEditable] = useState(editor.isEditable);
+  const canEdit = isOwner && editable;
   const docId: string | null = node.attrs.docId;
   const label: string = node.attrs.label;
   // Older content saved before the `title` attribute existed only has `label`.
   const title: string = node.attrs.title ?? label;
   const exists = !!docId;
 
+  useEffect(() => {
+    function recompute() {
+      setEditable(editor.isEditable);
+    }
+    editor.on("update", recompute);
+    return () => {
+      editor.off("update", recompute);
+    };
+  }, [editor]);
+
   async function handleClick() {
     if (exists) {
       router.push(`/w/${wikiId}/wiki/${docId}`);
       return;
     }
-    if (!isOwner || creating) return;
+    if (!canEdit || creating) return;
     setCreating(true);
     try {
       const res = await fetch("/api/documents", {
@@ -44,7 +56,7 @@ export function WikiLinkView({ node, updateAttributes }: NodeViewProps) {
       <button
         type="button"
         onClick={handleClick}
-        disabled={!exists && !isOwner}
+        disabled={!exists && !canEdit}
         className={
           exists
             ? "text-blue-600 dark:text-blue-400 hover:underline decoration-1"
@@ -53,7 +65,7 @@ export function WikiLinkView({ node, updateAttributes }: NodeViewProps) {
         title={
           exists
             ? title
-            : t("wikiLink.notCreatedHint", { title }) + (isOwner ? t("wikiLink.clickToCreate") : "")
+            : t("wikiLink.notCreatedHint", { title }) + (canEdit ? t("wikiLink.clickToCreate") : "")
         }
       >
         {label}

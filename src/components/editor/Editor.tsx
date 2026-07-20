@@ -152,6 +152,13 @@ export function Editor({
     }
   }, [editor, content]);
 
+  // useEditor only applies the `editable` option at creation time — toggling preview
+  // mode changes the prop, but without this the underlying editor (and node views like
+  // footnotes/wikilinks that check editor.isEditable) would silently stay editable.
+  useEffect(() => {
+    editor?.setEditable(editable);
+  }, [editor, editable]);
+
   // Ctrl/Cmd+S force-saves immediately, bypassing the page's autosave debounce.
   useEffect(() => {
     if (!editor) return;

@@ -11,6 +11,8 @@ export function FootnoteView({ node, editor, getPos, updateAttributes }: NodeVie
   const { t } = useLanguage();
   const [index, setIndex] = useState(1);
   const [editing, setEditing] = useState(false);
+  const [editable, setEditable] = useState(editor.isEditable);
+  const canEdit = isOwner && editable;
 
   useEffect(() => {
     function recompute() {
@@ -21,6 +23,7 @@ export function FootnoteView({ node, editor, getPos, updateAttributes }: NodeVie
       const myPos = getPos();
       const idx = typeof myPos === "number" ? positions.indexOf(myPos) : -1;
       setIndex(idx === -1 ? positions.length : idx + 1);
+      setEditable(editor.isEditable);
     }
     recompute();
     editor.on("update", recompute);
@@ -36,14 +39,14 @@ export function FootnoteView({ node, editor, getPos, updateAttributes }: NodeVie
       <sup>
         <button
           type="button"
-          onClick={() => isOwner && setEditing(true)}
-          title={node.attrs.text || (isOwner ? t("footnote.editHint") : undefined)}
-          className={`px-0.5 text-blue-600 dark:text-blue-400 ${isOwner ? "hover:underline" : ""}`}
+          onClick={() => canEdit && setEditing(true)}
+          title={node.attrs.text || (canEdit ? t("footnote.editHint") : undefined)}
+          className={`px-0.5 text-blue-600 dark:text-blue-400 ${canEdit ? "hover:underline" : ""}`}
         >
           [{index}]
         </button>
       </sup>
-      {editing && isOwner && (
+      {editing && canEdit && (
         <PromptModal
           title={t("footnote.promptTitle")}
           initialValue={node.attrs.text ?? ""}

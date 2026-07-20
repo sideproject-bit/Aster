@@ -8,8 +8,10 @@ function heading(level: number, value: string): JSONContent {
   return { type: "heading", attrs: { level }, content: [{ type: "text", text: value }] };
 }
 
+// ProseMirror rejects empty text nodes, so an empty-string value must produce a
+// paragraph with no content at all rather than a paragraph wrapping `text("")`.
 function paragraph(content: JSONContent[]): JSONContent {
-  return { type: "paragraph", content };
+  return content.length > 0 ? { type: "paragraph", content } : { type: "paragraph" };
 }
 
 function text(value: string, marks?: { type: string }[]): JSONContent {
@@ -32,7 +34,7 @@ function bulletList(items: string[]): JSONContent {
 }
 
 function tableCell(kind: "tableHeader" | "tableCell", value: string): JSONContent {
-  return { type: kind, content: [paragraph([text(value)])] };
+  return { type: kind, content: [paragraph(value ? [text(value)] : [])] };
 }
 
 function table(headers: string[], rows: string[][]): JSONContent {
@@ -75,7 +77,13 @@ function meetingTemplateContent(lang: Lang): JSONContent {
       heading(2, t("demoWiki.tpl.meeting.actionsHeading")),
       table(
         [t("demoWiki.tpl.meeting.colAction"), t("demoWiki.tpl.meeting.colOwner"), t("demoWiki.tpl.meeting.colDue")],
-        [["", "", ""]]
+        [
+          [
+            t("demoWiki.tpl.meeting.exampleAction"),
+            t("demoWiki.tpl.meeting.exampleOwner"),
+            t("demoWiki.tpl.meeting.exampleDue"),
+          ],
+        ]
       ),
     ],
   };

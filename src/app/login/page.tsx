@@ -58,6 +58,11 @@ export default function LoginPage() {
         </button>
       </form>
       <p className="text-sm text-neutral-500">
+        <Link href="/forgot-password" className="text-blue-600 hover:underline dark:text-blue-400">
+          {t("auth.login.forgotPassword")}
+        </Link>
+      </p>
+      <p className="text-sm text-neutral-500">
         {t("auth.login.noAccount")}{" "}
         <Link href="/signup" className="text-blue-600 hover:underline dark:text-blue-400">
           {t("auth.signup.title")}

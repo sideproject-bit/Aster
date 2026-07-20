@@ -47,7 +47,7 @@ export function TopBar() {
         {status === "authenticated" && session?.user ? (
           <>
             <Link href="/account" className="text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200">
-              {session.user.email}
+              {session.user.name || session.user.email}
             </Link>
             <button
               onClick={() => signOut({ callbackUrl: "/" })}

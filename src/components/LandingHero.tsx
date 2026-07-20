@@ -11,7 +11,7 @@ export function LandingHero() {
       <img src="/Aster_logo_black.png" alt="Aster" className="mb-4 h-16 w-16 dark:hidden" />
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src="/Aster_logo_yellow.png" alt="Aster" className="mb-4 hidden h-16 w-16 dark:block" />
-      <h1 className="mb-2 text-3xl font-bold">Aster</h1>
+      <h1 className="font-aster mb-2 text-4xl">Aster</h1>
       <p className="mb-6 max-w-md text-neutral-500">{t("landing.tagline")}</p>
       <div className="flex gap-3">
         <Link

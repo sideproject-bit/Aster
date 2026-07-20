@@ -3,20 +3,33 @@
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 import { useLanguage } from "@/context/LanguageContext";
+import type { ForceGraphMethods } from "react-force-graph-2d";
 
 const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), { ssr: false });
 
-type GraphNode = { id: string; title: string; color: string };
+const BRAND = "#fec01f";
+const BRAND_DIM = "rgba(254, 192, 31, 0.55)";
+
+type GraphNode = { id: string; title: string; tagColor: string | null };
 type GraphLink = { source: string; target: string; type: "wikiLink" | "parent" };
 
 export default function GraphPage() {
   const { wikiId } = useParams<{ wikiId: string }>();
   const router = useRouter();
   const { t } = useLanguage();
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const isDark = mounted && resolvedTheme === "dark";
   const [data, setData] = useState<{ nodes: GraphNode[]; links: GraphLink[] } | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const fgRef = useRef<ForceGraphMethods>(undefined);
   const [size, setSize] = useState({ width: 800, height: 600 });
+
+  useEffect(() => {
+    Promise.resolve().then(() => setMounted(true));
+  }, []);
 
   useEffect(() => {
     fetch(`/api/graph?wikiId=${wikiId}`)
@@ -46,16 +59,20 @@ export default function GraphPage() {
         )}
         {data && data.nodes.length > 0 && (
           <ForceGraph2D
+            ref={fgRef}
             graphData={data}
             width={size.width}
             height={size.height}
+            backgroundColor="transparent"
+            onEngineStop={() => fgRef.current?.zoomToFit(400, 40)}
             nodeId="id"
             nodeLabel="title"
-            nodeColor={(node) => (node as GraphNode).color}
+            nodeColor={(node) => {
+              const n = node as GraphNode;
+              return n.tagColor ?? (isDark ? BRAND : "#171717");
+            }}
             nodeRelSize={5}
-            linkColor={(link) =>
-              (link as unknown as GraphLink).type === "wikiLink" ? "#94a3b8" : "#e2e8f0"
-            }
+            linkColor={() => (isDark ? BRAND_DIM : BRAND)}
             linkDirectionalArrowLength={(link) =>
               (link as unknown as GraphLink).type === "wikiLink" ? 4 : 0
             }
@@ -70,7 +87,7 @@ export default function GraphPage() {
               ctx.font = `${fontSize}px sans-serif`;
               ctx.textAlign = "center";
               ctx.textBaseline = "top";
-              ctx.fillStyle = "#525252";
+              ctx.fillStyle = isDark ? "#d4d4d4" : "#525252";
               ctx.fillText(label, n.x, n.y + 7);
             }}
             onNodeClick={(node) => router.push(`/w/${wikiId}/wiki/${(node as GraphNode).id}`)}

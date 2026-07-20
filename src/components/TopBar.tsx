@@ -35,7 +35,7 @@ export function TopBar() {
           <img src="/Aster_logo_black.png" alt="Aster" className="h-6 w-6 dark:hidden" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/Aster_logo_yellow.png" alt="Aster" className="hidden h-6 w-6 dark:block" />
-          Aster
+          <span className="font-aster text-base">Aster</span>
         </Link>
         {params.wikiId && wikis.length > 0 && (
           <WikiSwitcher wikis={wikis} currentWikiId={params.wikiId} />

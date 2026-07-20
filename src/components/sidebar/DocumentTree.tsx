@@ -354,7 +354,7 @@ export function DocumentTree() {
         )}
       </div>
       <div
-        className="flex-1 overflow-y-auto py-2"
+        className="min-h-0 flex-1 overflow-y-auto py-2"
         onDragOver={(e) => isOwner && e.preventDefault()}
         onDrop={async (e) => {
           e.preventDefault();

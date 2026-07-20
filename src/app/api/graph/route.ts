@@ -3,8 +3,6 @@ import { prisma } from "@/lib/prisma";
 import { collectWikiLinkTargets } from "@/lib/wikiLinks";
 import { getViewableWiki } from "@/lib/wikiAccess";
 
-const DEFAULT_NODE_COLOR = "#a3a3a3";
-
 export async function GET(req: NextRequest) {
   const wikiId = req.nextUrl.searchParams.get("wikiId");
   if (!wikiId) {
@@ -33,7 +31,7 @@ export async function GET(req: NextRequest) {
   const nodes = documents.map((d) => ({
     id: d.id,
     title: d.title,
-    color: d.tags[0]?.color ?? DEFAULT_NODE_COLOR,
+    tagColor: d.tags[0]?.color ?? null,
   }));
 
   const links: { source: string; target: string; type: "wikiLink" | "parent" }[] = [];

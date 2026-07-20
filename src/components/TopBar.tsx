@@ -24,13 +24,14 @@ export function TopBar() {
   return (
     <header className="flex h-12 shrink-0 items-center justify-between border-b border-neutral-200 px-4 dark:border-neutral-800">
       <div className="flex items-center gap-3">
-        {/* Swap for the actual logo files once available: an <img> pair at
-            /logo-black.png (light mode) and /logo-yellow.png (dark mode). */}
         <Link
           href={status === "authenticated" ? "/wikis" : "/"}
           className="flex items-center gap-1.5 font-semibold"
         >
-          <span className="h-2.5 w-2.5 rounded-full bg-brand" aria-hidden />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/Aster_logo_black.png" alt="Aster" className="h-6 w-6 dark:hidden" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/Aster_logo_yellow.png" alt="Aster" className="hidden h-6 w-6 dark:block" />
           Aster
         </Link>
         {params.wikiId && wikis.length > 0 && (

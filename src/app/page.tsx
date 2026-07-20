@@ -10,6 +10,10 @@ export default async function LandingPage() {
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-8 py-16 text-center">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/Aster_logo_black.png" alt="Aster" className="mb-4 h-16 w-16 dark:hidden" />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/Aster_logo_yellow.png" alt="Aster" className="mb-4 hidden h-16 w-16 dark:block" />
       <h1 className="mb-2 text-3xl font-bold">Aster</h1>
       <p className="mb-6 max-w-md text-neutral-500">
         옵시디언과 나무위키를 결합한 나만의 세계관 위키를 만들어보세요.

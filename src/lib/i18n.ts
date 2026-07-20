@@ -210,7 +210,7 @@ export const dictionaries: Record<Lang, Record<string, string>> = {
     "demoWiki.templatesFolder": "Templates",
     "demoWiki.welcomeFolder": "Welcome",
     "demoWiki.welcomeTitleEn": "(Eng)Welcome to Aster",
-    "demoWiki.welcomeTitleKo": "(Kor)Welcome to Aster",
+    "demoWiki.welcomeTitleKo": "(한국어)Welcome to Aster",
     "demoWiki.crossLinkPrefix": "New here? ",
     "demoWiki.crossLinkSuffix": ".",
 
@@ -489,7 +489,7 @@ export const dictionaries: Record<Lang, Record<string, string>> = {
     "demoWiki.templatesFolder": "템플릿",
     "demoWiki.welcomeFolder": "Welcome",
     "demoWiki.welcomeTitleEn": "(Eng)Welcome to Aster",
-    "demoWiki.welcomeTitleKo": "(Kor)Welcome to Aster",
+    "demoWiki.welcomeTitleKo": "(한국어)Welcome to Aster",
     "demoWiki.crossLinkPrefix": "영어로 보고 싶으신가요? ",
     "demoWiki.crossLinkSuffix": ".",
 

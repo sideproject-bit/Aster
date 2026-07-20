@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SessionProviderWrapper } from "@/components/providers/SessionProviderWrapper";
 import { ThemeProviderWrapper } from "@/components/providers/ThemeProviderWrapper";
+import { LanguageProvider } from "@/context/LanguageContext";
 import { TopBar } from "@/components/TopBar";
 
 const geistSans = Geist({
@@ -17,7 +18,13 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Aster",
-  description: "옵시디언과 나무위키를 결합한 개인 세계관 위키",
+  description: "A personal wiki combining Obsidian-style editing with Namuwiki-style structure",
+  icons: {
+    icon: [
+      { url: "/Aster_logo_black.png", media: "(prefers-color-scheme: light)" },
+      { url: "/Aster_logo_yellow.png", media: "(prefers-color-scheme: dark)" },
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -27,17 +34,19 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="ko"
+      lang="en"
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <SessionProviderWrapper>
-          <ThemeProviderWrapper>
-            <TopBar />
-            <div className="flex flex-1 min-h-0">{children}</div>
-          </ThemeProviderWrapper>
-        </SessionProviderWrapper>
+        <LanguageProvider>
+          <SessionProviderWrapper>
+            <ThemeProviderWrapper>
+              <TopBar />
+              <div className="flex flex-1 min-h-0">{children}</div>
+            </ThemeProviderWrapper>
+          </SessionProviderWrapper>
+        </LanguageProvider>
       </body>
     </html>
   );

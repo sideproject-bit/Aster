@@ -4,9 +4,11 @@ import { NodeViewWrapper, type NodeViewProps } from "@tiptap/react";
 import { useEffect, useState } from "react";
 import { PromptModal } from "@/components/ui/PromptModal";
 import { useDocuments } from "@/context/DocumentsContext";
+import { useLanguage } from "@/context/LanguageContext";
 
 export function FootnoteView({ node, editor, getPos, updateAttributes }: NodeViewProps) {
   const { isOwner } = useDocuments();
+  const { t } = useLanguage();
   const [index, setIndex] = useState(1);
   const [editing, setEditing] = useState(false);
 
@@ -35,7 +37,7 @@ export function FootnoteView({ node, editor, getPos, updateAttributes }: NodeVie
         <button
           type="button"
           onClick={() => isOwner && setEditing(true)}
-          title={node.attrs.text || (isOwner ? "클릭하여 각주 내용 입력" : undefined)}
+          title={node.attrs.text || (isOwner ? t("footnote.editHint") : undefined)}
           className={`px-0.5 text-blue-600 dark:text-blue-400 ${isOwner ? "hover:underline" : ""}`}
         >
           [{index}]
@@ -43,7 +45,7 @@ export function FootnoteView({ node, editor, getPos, updateAttributes }: NodeVie
       </sup>
       {editing && isOwner && (
         <PromptModal
-          title="각주 내용"
+          title={t("footnote.promptTitle")}
           initialValue={node.attrs.text ?? ""}
           multiline
           onSubmit={(text) => {

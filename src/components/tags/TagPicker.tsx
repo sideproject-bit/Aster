@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { TAG_COLORS } from "@/lib/tagColors";
 import type { TagSummary } from "@/context/DocumentsContext";
+import { useLanguage } from "@/context/LanguageContext";
 
 type Props = {
   wikiId: string;
@@ -11,6 +12,7 @@ type Props = {
 };
 
 export function TagPicker({ wikiId, tags, onChange }: Props) {
+  const { t } = useLanguage();
   const [allTags, setAllTags] = useState<TagSummary[]>([]);
   const [open, setOpen] = useState(false);
   const [newName, setNewName] = useState("");
@@ -68,7 +70,7 @@ export function TagPicker({ wikiId, tags, onChange }: Props) {
             type="button"
             onClick={() => toggleTag(tag)}
             className="leading-none opacity-80 hover:opacity-100"
-            title="태그 제거"
+            title={t("tagPicker.removeTag")}
           >
             ×
           </button>
@@ -80,7 +82,7 @@ export function TagPicker({ wikiId, tags, onChange }: Props) {
         onClick={() => setOpen((v) => !v)}
         className="rounded-full border border-dashed border-neutral-300 px-2 py-0.5 text-xs text-neutral-500 hover:border-neutral-400 hover:text-neutral-700 dark:border-neutral-700 dark:hover:text-neutral-300"
       >
-        + 태그
+        {t("tagPicker.addTag")}
       </button>
 
       {open && (
@@ -130,7 +132,7 @@ export function TagPicker({ wikiId, tags, onChange }: Props) {
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && createTag()}
-                placeholder="새 태그 이름"
+                placeholder={t("tagPicker.newTagName")}
                 className="min-w-0 flex-1 rounded border border-neutral-300 bg-transparent px-2 py-1 text-xs outline-none focus:border-neutral-500 dark:border-neutral-700"
               />
               <button
@@ -138,7 +140,7 @@ export function TagPicker({ wikiId, tags, onChange }: Props) {
                 onClick={createTag}
                 className="rounded bg-brand px-2 py-1 text-xs font-medium text-brand-foreground hover:opacity-90"
               >
-                추가
+                {t("tagPicker.add")}
               </button>
             </div>
           </div>

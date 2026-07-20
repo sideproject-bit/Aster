@@ -2,10 +2,12 @@
 
 import { NodeViewWrapper, NodeViewContent, type NodeViewProps } from "@tiptap/react";
 import { useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 const TAGS = ["h1", "h2", "h3", "h4", "h5", "h6"] as const;
 
 export function HeadingView({ node, editor, getPos }: NodeViewProps) {
+  const { t } = useLanguage();
   const [collapsed, setCollapsed] = useState(false);
   const level: number = node.attrs.level ?? 2;
   const Tag = TAGS[level - 1] ?? "h2";
@@ -42,7 +44,7 @@ export function HeadingView({ node, editor, getPos }: NodeViewProps) {
         type="button"
         contentEditable={false}
         onClick={toggle}
-        title={collapsed ? "펼치기" : "접기"}
+        title={collapsed ? t("heading.expand") : t("heading.collapse")}
         className="select-none text-xs text-neutral-300 hover:text-neutral-600 dark:text-neutral-600 dark:hover:text-neutral-300"
         style={{ userSelect: "none" }}
       >

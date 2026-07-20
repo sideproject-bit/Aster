@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { useLanguage } from "@/context/LanguageContext";
 
 const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), { ssr: false });
 
@@ -12,6 +13,7 @@ type GraphLink = { source: string; target: string; type: "wikiLink" | "parent" }
 export default function GraphPage() {
   const { wikiId } = useParams<{ wikiId: string }>();
   const router = useRouter();
+  const { t } = useLanguage();
   const [data, setData] = useState<{ nodes: GraphNode[]; links: GraphLink[] } | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ width: 800, height: 600 });
@@ -35,11 +37,11 @@ export default function GraphPage() {
 
   return (
     <div className="flex h-full flex-col p-6">
-      <h1 className="mb-4 text-xl font-semibold">문서 연동 그래프</h1>
+      <h1 className="mb-4 text-xl font-semibold">{t("graph.title")}</h1>
       <div ref={containerRef} className="min-h-0 flex-1 rounded-lg border border-neutral-200 dark:border-neutral-800">
         {data && data.nodes.length === 0 && (
           <div className="flex h-full items-center justify-center text-sm text-neutral-400">
-            아직 문서가 없습니다.
+            {t("graph.empty")}
           </div>
         )}
         {data && data.nodes.length > 0 && (

@@ -4,9 +4,17 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useLanguage } from "@/context/LanguageContext";
+
+const ERROR_KEYS: Record<string, string> = {
+  missing_fields: "auth.error.missingFields",
+  password_too_short: "auth.error.passwordTooShort",
+  email_taken: "auth.error.emailTaken",
+};
 
 export default function SignupPage() {
   const router = useRouter();
+  const { t, lang } = useLanguage();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -21,15 +29,16 @@ export default function SignupPage() {
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password, name }),
+      body: JSON.stringify({ email, password, name, lang }),
     });
 
     if (!res.ok) {
       const data = await res.json();
-      setError(data.error ?? "가입에 실패했습니다");
+      setError(ERROR_KEYS[data.error] ? t(ERROR_KEYS[data.error]) : t("auth.signup.genericError"));
       setLoading(false);
       return;
     }
+    const created = await res.json();
 
     const signInRes = await signIn("credentials", { email, password, redirect: false });
     setLoading(false);
@@ -37,17 +46,17 @@ export default function SignupPage() {
       router.push("/login");
       return;
     }
-    router.push("/wikis");
+    router.push(created.demoWikiId ? `/w/${created.demoWikiId}` : "/wikis");
     router.refresh();
   }
 
   return (
     <div className="mx-auto flex max-w-sm flex-col gap-4 px-8 py-16">
-      <h1 className="text-2xl font-semibold">회원가입</h1>
+      <h1 className="text-2xl font-semibold">{t("auth.signup.title")}</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <input
           type="text"
-          placeholder="이름 (선택)"
+          placeholder={t("auth.nameOptional")}
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="rounded border border-neutral-300 bg-transparent px-3 py-2 dark:border-neutral-700"
@@ -55,7 +64,7 @@ export default function SignupPage() {
         <input
           type="email"
           required
-          placeholder="이메일"
+          placeholder={t("auth.email")}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="rounded border border-neutral-300 bg-transparent px-3 py-2 dark:border-neutral-700"
@@ -64,7 +73,7 @@ export default function SignupPage() {
           type="password"
           required
           minLength={8}
-          placeholder="비밀번호 (8자 이상)"
+          placeholder={t("auth.passwordHint")}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="rounded border border-neutral-300 bg-transparent px-3 py-2 dark:border-neutral-700"
@@ -75,13 +84,13 @@ export default function SignupPage() {
           disabled={loading}
           className="rounded bg-brand px-3 py-2 font-medium text-brand-foreground hover:opacity-90 disabled:opacity-50"
         >
-          {loading ? "가입 중…" : "회원가입"}
+          {loading ? t("auth.signup.loading") : t("auth.signup.button")}
         </button>
       </form>
       <p className="text-sm text-neutral-500">
-        이미 계정이 있으신가요?{" "}
+        {t("auth.signup.haveAccount")}{" "}
         <Link href="/login" className="text-blue-600 hover:underline dark:text-blue-400">
-          로그인
+          {t("auth.login.title")}
         </Link>
       </p>
     </div>

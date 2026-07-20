@@ -1,5 +1,7 @@
 "use client";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 type Props = {
   message: string;
   confirmLabel?: string;
@@ -7,7 +9,8 @@ type Props = {
   onCancel: () => void;
 };
 
-export function ConfirmModal({ message, confirmLabel = "삭제", onConfirm, onCancel }: Props) {
+export function ConfirmModal({ message, confirmLabel, onConfirm, onCancel }: Props) {
+  const { t } = useLanguage();
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4"
@@ -23,13 +26,13 @@ export function ConfirmModal({ message, confirmLabel = "삭제", onConfirm, onCa
             onClick={onCancel}
             className="rounded px-3 py-1 text-sm text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800"
           >
-            취소
+            {t("common.cancel")}
           </button>
           <button
             onClick={onConfirm}
             className="rounded bg-red-600 px-3 py-1 text-sm text-white hover:bg-red-500"
           >
-            {confirmLabel}
+            {confirmLabel ?? t("common.delete")}
           </button>
         </div>
       </div>

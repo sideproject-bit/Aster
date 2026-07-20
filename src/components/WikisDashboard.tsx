@@ -7,6 +7,7 @@ import Link from "next/link";
 import { PromptModal } from "@/components/ui/PromptModal";
 import { ConfirmModal } from "@/components/ui/ConfirmModal";
 import { CollaboratorsPanel } from "@/components/CollaboratorsPanel";
+import { useLanguage } from "@/context/LanguageContext";
 
 type Wiki = {
   id: string;
@@ -20,6 +21,7 @@ type Wiki = {
 export function WikisDashboard() {
   const router = useRouter();
   const { data: session } = useSession();
+  const { t } = useLanguage();
   const [wikis, setWikis] = useState<Wiki[] | null>(null);
   const [creating, setCreating] = useState(false);
   const [renaming, setRenaming] = useState<Wiki | null>(null);
@@ -88,20 +90,18 @@ export function WikisDashboard() {
   return (
     <div className="mx-auto w-full max-w-2xl px-8 py-10">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">내 위키</h1>
+        <h1 className="text-2xl font-semibold">{t("dashboard.myWikis")}</h1>
         <button
           onClick={() => setCreating(true)}
           className="rounded bg-brand px-3 py-1.5 text-sm font-medium text-brand-foreground hover:opacity-90"
         >
-          새 위키
+          {t("dashboard.newWiki")}
         </button>
       </div>
 
-      {wikis === null && <p className="text-sm text-neutral-400">불러오는 중…</p>}
+      {wikis === null && <p className="text-sm text-neutral-400">{t("dashboard.loading")}</p>}
       {wikis?.length === 0 && (
-        <p className="text-sm text-neutral-400">
-          아직 위키가 없습니다. &quot;새 위키&quot; 버튼으로 시작하세요.
-        </p>
+        <p className="text-sm text-neutral-400">{t("dashboard.noWikisYet")}</p>
       )}
 
       {owned.length > 0 && (
@@ -120,7 +120,7 @@ export function WikisDashboard() {
                     {wiki.title}
                   </Link>
                   <div className="mt-0.5 flex items-center gap-2 text-xs text-neutral-400">
-                    <span>문서 {wiki._count.documents}개</span>
+                    <span>{t("dashboard.docsCount", { count: wiki._count.documents })}</span>
                     <span
                       className={
                         wiki.isPublic
@@ -128,7 +128,7 @@ export function WikisDashboard() {
                           : "rounded-full bg-neutral-100 px-1.5 py-0.5 text-neutral-500 dark:bg-neutral-800"
                       }
                     >
-                      {wiki.isPublic ? "공개" : "비공개"}
+                      {wiki.isPublic ? t("dashboard.public") : t("dashboard.private")}
                     </span>
                   </div>
                 </div>
@@ -139,22 +139,22 @@ export function WikisDashboard() {
                     }
                     className="hover:text-neutral-800 dark:hover:text-neutral-200"
                   >
-                    공동 작성자
+                    {t("dashboard.collaborators")}
                   </button>
                   <button
                     onClick={() => togglePublic(wiki)}
                     className="hover:text-neutral-800 dark:hover:text-neutral-200"
                   >
-                    {wiki.isPublic ? "비공개로" : "공개로"}
+                    {wiki.isPublic ? t("dashboard.makePrivate") : t("dashboard.makePublic")}
                   </button>
                   <button
                     onClick={() => setRenaming(wiki)}
                     className="hover:text-neutral-800 dark:hover:text-neutral-200"
                   >
-                    이름변경
+                    {t("dashboard.rename")}
                   </button>
                   <button onClick={() => setDeleting(wiki)} className="hover:text-red-500">
-                    삭제
+                    {t("dashboard.delete")}
                   </button>
                 </div>
               </div>
@@ -166,7 +166,9 @@ export function WikisDashboard() {
 
       {collaborating.length > 0 && (
         <div className="mt-8">
-          <h2 className="mb-2 text-sm font-semibold text-neutral-500">공동 작성 중인 위키</h2>
+          <h2 className="mb-2 text-sm font-semibold text-neutral-500">
+            {t("dashboard.collaboratingWikis")}
+          </h2>
           <ul className="space-y-2">
             {collaborating.map((wiki) => (
               <li
@@ -181,11 +183,11 @@ export function WikisDashboard() {
                     {wiki.title}
                   </Link>
                   <div className="mt-0.5 text-xs text-neutral-400">
-                    문서 {wiki._count.documents}개
+                    {t("dashboard.docsCount", { count: wiki._count.documents })}
                   </div>
                 </div>
                 <button onClick={() => setLeaving(wiki)} className="text-sm text-neutral-500 hover:text-red-500">
-                  나가기
+                  {t("dashboard.leave")}
                 </button>
               </li>
             ))}
@@ -194,11 +196,15 @@ export function WikisDashboard() {
       )}
 
       {creating && (
-        <PromptModal title="새 위키 이름" onSubmit={createWiki} onCancel={() => setCreating(false)} />
+        <PromptModal
+          title={t("dashboard.newWikiPrompt")}
+          onSubmit={createWiki}
+          onCancel={() => setCreating(false)}
+        />
       )}
       {renaming && (
         <PromptModal
-          title="위키 이름 변경"
+          title={t("dashboard.renamePrompt")}
           initialValue={renaming.title}
           onSubmit={renameWiki}
           onCancel={() => setRenaming(null)}
@@ -206,15 +212,15 @@ export function WikisDashboard() {
       )}
       {deleting && (
         <ConfirmModal
-          message={`"${deleting.title}" 위키를 삭제할까요? 안의 모든 문서가 함께 삭제됩니다.`}
+          message={t("dashboard.deleteConfirm", { title: deleting.title })}
           onConfirm={deleteWiki}
           onCancel={() => setDeleting(null)}
         />
       )}
       {leaving && (
         <ConfirmModal
-          message={`"${leaving.title}" 위키의 공동 작성자에서 나갈까요?`}
-          confirmLabel="나가기"
+          message={t("dashboard.leaveConfirm", { title: leaving.title })}
+          confirmLabel={t("dashboard.leave")}
           onConfirm={leaveWiki}
           onCancel={() => setLeaving(null)}
         />

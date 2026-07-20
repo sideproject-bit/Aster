@@ -38,6 +38,7 @@ import {
   DeleteTableIcon,
   LinkIcon,
 } from "./icons";
+import { useLanguage } from "@/context/LanguageContext";
 
 type Props = {
   wikiId: string;
@@ -66,6 +67,7 @@ export function Editor({
   editable = true,
   containerRef,
 }: Props) {
+  const { t } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [addingFootnote, setAddingFootnote] = useState(false);
   const [editorMenu, setEditorMenu] = useState<{ x: number; y: number } | null>(null);
@@ -81,7 +83,7 @@ export function Editor({
       StarterKit.configure({ heading: false }),
       CollapsibleHeading,
       Placeholder.configure({
-        placeholder: "내용을 입력하세요… ## 제목, **굵게**, [[ 로 문서 링크, 이미지는 붙여넣기/드래그",
+        placeholder: t("editor.placeholder"),
       }),
       Image,
       WikiLink.configure({ wikiId }),
@@ -211,19 +213,19 @@ export function Editor({
 
   const editorMenuItems: ContextMenuItem[] = [
     {
-      label: "굵게",
+      label: t("editor.bold"),
       icon: <BoldIcon className="h-3.5 w-3.5" />,
       onClick: () => editor.chain().focus().toggleBold().run(),
     },
     {
-      label: "기울임",
+      label: t("editor.italic"),
       icon: <ItalicIcon className="h-3.5 w-3.5" />,
       onClick: () => editor.chain().focus().toggleItalic().run(),
     },
     { separator: true },
-    { custom: <div className="px-3 pb-0.5 pt-1 text-xs text-neutral-400">글자 색</div> },
+    { custom: <div className="px-3 pb-0.5 pt-1 text-xs text-neutral-400">{t("editor.textColor")}</div> },
     { custom: colorSwatchRow((color) => editor.chain().focus().setColor(color).run()) },
-    { custom: <div className="px-3 pb-0.5 pt-1 text-xs text-neutral-400">배경 강조 색</div> },
+    { custom: <div className="px-3 pb-0.5 pt-1 text-xs text-neutral-400">{t("editor.highlightColor")}</div> },
     {
       custom: colorSwatchRow((color) =>
         editor.chain().focus().toggleHighlight({ color }).run()
@@ -231,12 +233,12 @@ export function Editor({
     },
     { separator: true },
     {
-      label: "각주 추가",
+      label: t("editor.footnoteAdd"),
       icon: <FootnoteIcon className="h-3.5 w-3.5" />,
       onClick: () => setAddingFootnote(true),
     },
     {
-      label: "문서 링크 삽입",
+      label: t("editor.docLinkInsert"),
       icon: <LinkIcon className="h-3.5 w-3.5" />,
       onClick: () => editor.chain().focus().insertContent("[[").run(),
     },
@@ -250,63 +252,63 @@ export function Editor({
       <div className="mb-2 flex flex-wrap items-center gap-1 border-b border-neutral-200 pb-2 dark:border-neutral-800">
         <ToolbarButton
           active={editor.isActive("heading", { level: 2 })}
-          title="제목 2"
+          title={t("editor.h2")}
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
         >
           H2
         </ToolbarButton>
         <ToolbarButton
           active={editor.isActive("heading", { level: 3 })}
-          title="제목 3"
+          title={t("editor.h3")}
           onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
         >
           H3
         </ToolbarButton>
         <ToolbarButton
           active={editor.isActive("heading", { level: 4 })}
-          title="제목 4"
+          title={t("editor.h4")}
           onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}
         >
           H4
         </ToolbarButton>
         <ToolbarButton
           active={editor.isActive("heading", { level: 5 })}
-          title="제목 5"
+          title={t("editor.h5")}
           onClick={() => editor.chain().focus().toggleHeading({ level: 5 }).run()}
         >
           H5
         </ToolbarButton>
         <ToolbarButton
           active={editor.isActive("bold")}
-          title="굵게"
+          title={t("editor.bold")}
           onClick={() => editor.chain().focus().toggleBold().run()}
         >
           <BoldIcon className="h-4 w-4" />
         </ToolbarButton>
         <ToolbarButton
           active={editor.isActive("italic")}
-          title="기울임"
+          title={t("editor.italic")}
           onClick={() => editor.chain().focus().toggleItalic().run()}
         >
           <ItalicIcon className="h-4 w-4" />
         </ToolbarButton>
         <ToolbarButton
           active={editor.isActive("bulletList")}
-          title="글머리 목록"
+          title={t("editor.bulletList")}
           onClick={() => editor.chain().focus().toggleBulletList().run()}
         >
           <ListIcon className="h-4 w-4" />
         </ToolbarButton>
         <ToolbarButton
           active={editor.isActive("blockquote")}
-          title="인용"
+          title={t("editor.quote")}
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
         >
           <QuoteIcon className="h-4 w-4" />
         </ToolbarButton>
         <ColorSwatches
           label={<TextColorIcon className="h-4 w-4" />}
-          title="글자 색"
+          title={t("editor.textColor")}
           onPick={(color) =>
             color
               ? editor.chain().focus().setColor(color).run()
@@ -315,21 +317,21 @@ export function Editor({
         />
         <ColorSwatches
           label={<HighlightIcon className="h-4 w-4" />}
-          title="배경 강조 색"
+          title={t("editor.highlightColor")}
           onPick={(color) =>
             color
               ? editor.chain().focus().toggleHighlight({ color }).run()
               : editor.chain().focus().unsetHighlight().run()
           }
         />
-        <ToolbarButton title="각주 추가" onClick={() => setAddingFootnote(true)}>
+        <ToolbarButton title={t("editor.footnoteAdd")} onClick={() => setAddingFootnote(true)}>
           <FootnoteIcon className="h-4 w-4" />
         </ToolbarButton>
-        <ToolbarButton title="이미지" onClick={handleImageButton}>
+        <ToolbarButton title={t("editor.image")} onClick={handleImageButton}>
           <ImageIcon className="h-4 w-4" />
         </ToolbarButton>
         <ToolbarButton
-          title="표 삽입"
+          title={t("editor.insertTable")}
           onClick={() =>
             editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
           }
@@ -338,33 +340,33 @@ export function Editor({
         </ToolbarButton>
         {inTable && (
           <>
-            <ToolbarButton title="행 추가" onClick={() => editor.chain().focus().addRowAfter().run()}>
+            <ToolbarButton title={t("editor.addRow")} onClick={() => editor.chain().focus().addRowAfter().run()}>
               <AddRowIcon className="h-4 w-4" />
             </ToolbarButton>
             <ToolbarButton
-              title="열 추가"
+              title={t("editor.addColumn")}
               onClick={() => editor.chain().focus().addColumnAfter().run()}
             >
               <AddColumnIcon className="h-4 w-4" />
             </ToolbarButton>
-            <ToolbarButton title="행 삭제" onClick={() => editor.chain().focus().deleteRow().run()}>
+            <ToolbarButton title={t("editor.deleteRow")} onClick={() => editor.chain().focus().deleteRow().run()}>
               <DeleteRowIcon className="h-4 w-4" />
             </ToolbarButton>
             <ToolbarButton
-              title="열 삭제"
+              title={t("editor.deleteColumn")}
               onClick={() => editor.chain().focus().deleteColumn().run()}
             >
               <DeleteColumnIcon className="h-4 w-4" />
             </ToolbarButton>
             <ColorSwatches
               label={<SwatchIcon className="h-4 w-4" />}
-              title="셀 배경 색"
+              title={t("editor.cellColor")}
               onPick={(color) =>
                 editor.chain().focus().setCellAttribute("backgroundColor", color).run()
               }
             />
             <ToolbarButton
-              title="표 삭제"
+              title={t("editor.deleteTable")}
               onClick={() => editor.chain().focus().deleteTable().run()}
             >
               <DeleteTableIcon className="h-4 w-4" />
@@ -381,9 +383,9 @@ export function Editor({
         <span className="ml-auto flex items-center gap-2">
           <span
             className="text-xs text-neutral-400"
-            title="예: [[등장인물 목록|여기"
+            title={t("editor.wikiLinkHintTitle")}
           >
-            [[ 또는 Ctrl/⌘+K 로 문서 링크
+            {t("editor.wikiLinkHint")}
           </span>
           <ShortcutsHelp />
         </span>
@@ -402,7 +404,7 @@ export function Editor({
       )}
       {addingFootnote && (
         <PromptModal
-          title="각주 내용"
+          title={t("editor.footnotePromptTitle")}
           multiline
           onSubmit={insertFootnote}
           onCancel={() => setAddingFootnote(false)}

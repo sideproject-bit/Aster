@@ -2,6 +2,7 @@
 
 import { useState, type RefObject } from "react";
 import type { HeadingEntry } from "@/lib/toc";
+import { useLanguage } from "@/context/LanguageContext";
 
 type Props = {
   headings: HeadingEntry[];
@@ -9,6 +10,7 @@ type Props = {
 };
 
 export function TableOfContents({ headings, containerRef }: Props) {
+  const { t } = useLanguage();
   const [expanded, setExpanded] = useState(true);
 
   if (headings.length < 2) return null;
@@ -35,9 +37,9 @@ export function TableOfContents({ headings, containerRef }: Props) {
         onClick={() => setExpanded((v) => !v)}
         className="flex w-full items-center justify-between px-4 py-2 text-sm font-medium"
       >
-        목차
+        {t("toc.title")}
         <span className="text-xs font-normal text-neutral-400">
-          {expanded ? "접기" : "펼치기"}
+          {expanded ? t("toc.collapse") : t("toc.expand")}
         </span>
       </button>
       {expanded && (

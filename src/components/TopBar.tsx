@@ -5,11 +5,14 @@ import { useParams, useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { ThemeToggle } from "./ThemeToggle";
+import { LanguageToggle } from "./LanguageToggle";
+import { useLanguage } from "@/context/LanguageContext";
 
 type WikiSummary = { id: string; title: string };
 
 export function TopBar() {
   const { data: session, status } = useSession();
+  const { t } = useLanguage();
   const router = useRouter();
   const params = useParams<{ wikiId?: string }>();
   const [wikis, setWikis] = useState<WikiSummary[]>([]);
@@ -49,6 +52,7 @@ export function TopBar() {
         )}
       </div>
       <div className="flex items-center gap-3 text-sm">
+        <LanguageToggle />
         <ThemeToggle />
         {status === "authenticated" && session?.user ? (
           <>
@@ -57,16 +61,16 @@ export function TopBar() {
               onClick={() => signOut({ callbackUrl: "/" })}
               className="text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200"
             >
-              로그아웃
+              {t("topbar.logout")}
             </button>
           </>
         ) : status === "unauthenticated" ? (
           <>
             <Link href="/login" className="text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200">
-              로그인
+              {t("topbar.login")}
             </Link>
             <Link href="/signup" className="text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200">
-              회원가입
+              {t("topbar.signup")}
             </Link>
           </>
         ) : null}

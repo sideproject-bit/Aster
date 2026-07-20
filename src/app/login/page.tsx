@@ -4,9 +4,11 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -19,7 +21,7 @@ export default function LoginPage() {
     const res = await signIn("credentials", { email, password, redirect: false });
     setLoading(false);
     if (res?.error) {
-      setError("이메일 또는 비밀번호가 올바르지 않습니다");
+      setError(t("auth.login.invalidCredentials"));
       return;
     }
     router.push("/wikis");
@@ -28,12 +30,12 @@ export default function LoginPage() {
 
   return (
     <div className="mx-auto flex max-w-sm flex-col gap-4 px-8 py-16">
-      <h1 className="text-2xl font-semibold">로그인</h1>
+      <h1 className="text-2xl font-semibold">{t("auth.login.title")}</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <input
           type="email"
           required
-          placeholder="이메일"
+          placeholder={t("auth.email")}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="rounded border border-neutral-300 bg-transparent px-3 py-2 dark:border-neutral-700"
@@ -41,7 +43,7 @@ export default function LoginPage() {
         <input
           type="password"
           required
-          placeholder="비밀번호"
+          placeholder={t("auth.password")}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="rounded border border-neutral-300 bg-transparent px-3 py-2 dark:border-neutral-700"
@@ -52,13 +54,13 @@ export default function LoginPage() {
           disabled={loading}
           className="rounded bg-brand px-3 py-2 font-medium text-brand-foreground hover:opacity-90 disabled:opacity-50"
         >
-          {loading ? "로그인 중…" : "로그인"}
+          {loading ? t("auth.login.loading") : t("auth.login.button")}
         </button>
       </form>
       <p className="text-sm text-neutral-500">
-        계정이 없으신가요?{" "}
+        {t("auth.login.noAccount")}{" "}
         <Link href="/signup" className="text-blue-600 hover:underline dark:text-blue-400">
-          회원가입
+          {t("auth.signup.title")}
         </Link>
       </p>
     </div>

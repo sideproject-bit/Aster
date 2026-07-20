@@ -7,6 +7,7 @@ import { PromptModal } from "@/components/ui/PromptModal";
 import { ConfirmModal } from "@/components/ui/ConfirmModal";
 import { ContextMenu, type ContextMenuItem } from "@/components/ui/ContextMenu";
 import { FolderIcon, DocIcon, PencilIcon } from "./icons";
+import { useLanguage } from "@/context/LanguageContext";
 
 type DropPosition = "before" | "after" | "inside";
 type DropTarget = { id: string; position: DropPosition };
@@ -71,6 +72,7 @@ function TreeNode({
   drag: DragHandlers;
 }) {
   const { childrenOf, refresh } = useDocuments();
+  const { t } = useLanguage();
   const router = useRouter();
   const params = useParams<{ docId?: string }>();
   const kids = childrenOf(doc.id);
@@ -186,13 +188,13 @@ function TreeNode({
           </span>
         )}
         {!doc.isFolder && doc.status === "DRAFT" && (
-          <span className="text-[10px] text-amber-600 shrink-0">초안</span>
+          <span className="text-[10px] text-amber-600 shrink-0">{t("sidebar.draft")}</span>
         )}
         {isOwner && !editing && (
           <>
             <button
               className="opacity-0 group-hover:opacity-100 text-neutral-400 hover:text-neutral-700 shrink-0"
-              title="이름 변경"
+              title={t("sidebar.rename")}
               onClick={(e) => {
                 e.stopPropagation();
                 onRequestRename(doc.id);
@@ -202,7 +204,7 @@ function TreeNode({
             </button>
             <button
               className="opacity-0 group-hover:opacity-100 text-neutral-400 hover:text-neutral-700 shrink-0"
-              title="하위 문서 추가"
+              title={t("sidebar.addSubdoc")}
               onClick={(e) => {
                 e.stopPropagation();
                 setExpanded(true);
@@ -236,6 +238,7 @@ function TreeNode({
 export function DocumentTree() {
   const { wikiId, isOwner, documents, childrenOf, loading, refresh, isDescendant } =
     useDocuments();
+  const { t } = useLanguage();
   const router = useRouter();
   const params = useParams<{ docId?: string }>();
   const roots = childrenOf(null);
@@ -317,11 +320,11 @@ export function DocumentTree() {
 
   const menuItems: ContextMenuItem[] = menu
     ? [
-        { label: "이름 변경", onClick: () => setRenamingId(menu.doc.id) },
-        { label: "새 하위 문서", onClick: () => requestNew(menu.doc.id, false) },
-        { label: "새 하위 폴더", onClick: () => requestNew(menu.doc.id, true) },
+        { label: t("sidebar.contextRename"), onClick: () => setRenamingId(menu.doc.id) },
+        { label: t("sidebar.contextNewSubdoc"), onClick: () => requestNew(menu.doc.id, false) },
+        { label: t("sidebar.contextNewSubfolder"), onClick: () => requestNew(menu.doc.id, true) },
         { separator: true },
-        { label: "삭제", danger: true, onClick: () => setDeleting(menu.doc) },
+        { label: t("sidebar.contextDelete"), danger: true, onClick: () => setDeleting(menu.doc) },
       ]
     : [];
 
@@ -329,20 +332,20 @@ export function DocumentTree() {
     <div className="flex h-full flex-col">
       <div className="flex items-center justify-between px-3 py-2 border-b border-neutral-200 dark:border-neutral-800">
         <span className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-          문서
+          {t("sidebar.documents")}
         </span>
         {isOwner && (
           <div className="flex items-center gap-2">
             <button
               className="text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200"
-              title="새 폴더"
+              title={t("sidebar.newFolder")}
               onClick={() => requestNew(null, true)}
             >
               <FolderIcon className="h-4 w-4" />
             </button>
             <button
               className="text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200 text-lg leading-none"
-              title="새 문서"
+              title={t("sidebar.newDocument")}
               onClick={() => requestNew(null, false)}
             >
               +
@@ -377,10 +380,10 @@ export function DocumentTree() {
           await refresh();
         }}
       >
-        {loading && <div className="px-3 text-sm text-neutral-400">불러오는 중…</div>}
+        {loading && <div className="px-3 text-sm text-neutral-400">{t("common.loading")}</div>}
         {!loading && roots.length === 0 && (
           <div className="px-3 text-sm text-neutral-400">
-            {isOwner ? "문서가 없습니다. + 버튼으로 시작하세요." : "공개된 문서가 없습니다."}
+            {isOwner ? t("sidebar.noDocumentsOwner") : t("sidebar.noDocumentsViewer")}
           </div>
         )}
         {roots.map((doc) => (
@@ -403,7 +406,7 @@ export function DocumentTree() {
           onClick={() => router.push(`/w/${wikiId}/graph`)}
           className="text-xs text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200"
         >
-          그래프 보기
+          {t("sidebar.viewGraph")}
         </button>
       </div>
       {creatingUnder !== undefined && (
@@ -411,11 +414,11 @@ export function DocumentTree() {
           title={
             creatingFolder
               ? creatingUnder
-                ? "새 하위 폴더 이름"
-                : "새 폴더 이름"
+                ? t("sidebar.newSubfolderPrompt")
+                : t("sidebar.newFolderPrompt")
               : creatingUnder
-                ? "새 하위 문서 제목"
-                : "새 문서 제목"
+                ? t("sidebar.newSubdocPrompt")
+                : t("sidebar.newDocPrompt")
           }
           onSubmit={createDocument}
           onCancel={() => {
@@ -427,7 +430,9 @@ export function DocumentTree() {
       {menu && <ContextMenu x={menu.x} y={menu.y} items={menuItems} onClose={() => setMenu(null)} />}
       {deleting && (
         <ConfirmModal
-          message={`"${deleting.title}" ${deleting.isFolder ? "폴더" : "문서"}를 삭제할까요? 하위 항목은 상위로 이동합니다.`}
+          message={t(deleting.isFolder ? "sidebar.deleteFolderConfirm" : "sidebar.deleteDocConfirm", {
+            title: deleting.title,
+          })}
           onConfirm={deleteDocument}
           onCancel={() => setDeleting(null)}
         />

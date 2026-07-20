@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { useDocuments } from "@/context/DocumentsContext";
+import { useLanguage } from "@/context/LanguageContext";
 
 export function Breadcrumb({ docId }: { docId: string }) {
   const { wikiId, ancestors } = useDocuments();
+  const { t } = useLanguage();
   const chain = ancestors(docId);
 
   if (chain.length === 0) return null;
@@ -15,7 +17,7 @@ export function Breadcrumb({ docId }: { docId: string }) {
         href={`/w/${wikiId}`}
         className="hover:underline hover:text-neutral-800 dark:hover:text-neutral-200"
       >
-        홈
+        {t("breadcrumb.home")}
       </Link>
       {chain.map((doc) => (
         <span key={doc.id} className="flex items-center gap-1">

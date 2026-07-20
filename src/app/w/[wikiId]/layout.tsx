@@ -1,6 +1,7 @@
 import { getViewableWiki } from "@/lib/wikiAccess";
 import { DocumentsProvider } from "@/context/DocumentsContext";
 import { DocumentTree } from "@/components/sidebar/DocumentTree";
+import { NoAccessMessage } from "@/components/NoAccessMessage";
 
 export default async function WikiLayout({
   children,
@@ -13,14 +14,7 @@ export default async function WikiLayout({
   const access = await getViewableWiki(wikiId);
 
   if (!access) {
-    return (
-      <div className="flex flex-1 items-center justify-center p-8 text-center">
-        <div>
-          <p className="mb-2 text-lg font-medium">접근할 수 없습니다</p>
-          <p className="text-sm text-neutral-500">비공개 위키이거나 존재하지 않는 위키입니다.</p>
-        </div>
-      </div>
-    );
+    return <NoAccessMessage />;
   }
 
   return (

@@ -6,6 +6,7 @@ import {
   useImperativeHandle,
   useState,
 } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export type WikiLinkSuggestionItem = {
   id: string | null;
@@ -26,6 +27,7 @@ export type WikiLinkSuggestionListHandle = {
 
 export const WikiLinkSuggestionList = forwardRef<WikiLinkSuggestionListHandle, Props>(
   function WikiLinkSuggestionList({ items, command }, ref) {
+    const { t } = useLanguage();
     const [selected, setSelected] = useState(0);
 
     useEffect(() => setSelected(0), [items]);
@@ -52,7 +54,7 @@ export const WikiLinkSuggestionList = forwardRef<WikiLinkSuggestionListHandle, P
     if (items.length === 0) {
       return (
         <div className="rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-400 shadow-lg dark:border-neutral-700 dark:bg-neutral-900">
-          일치하는 문서 없음 — Enter로 새 문서 생성
+          {t("wikiLinkSuggest.noMatch")}
         </div>
       );
     }
@@ -72,11 +74,11 @@ export const WikiLinkSuggestionList = forwardRef<WikiLinkSuggestionListHandle, P
             onClick={() => command(item)}
           >
             <span className="w-full truncate">
-              {item.id ? item.title : `"${item.title}" 새로 만들기`}
+              {item.id ? item.title : t("wikiLinkSuggest.createNew", { title: item.title })}
             </span>
             {item.label !== item.title && (
               <span className="w-full truncate text-xs text-neutral-400">
-                표시: {item.label}
+                {t("wikiLinkSuggest.displayAs", { label: item.label })}
               </span>
             )}
           </button>

@@ -1,21 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useTheme } from "next-themes";
 import { useLanguage } from "@/context/LanguageContext";
+import type { Lang } from "@/lib/i18n";
 
-const ORDER = ["light", "dark", "system"] as const;
+const ORDER: Lang[] = ["en", "ko"];
 
-export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
-  const { t } = useLanguage();
-  const [mounted, setMounted] = useState(false);
+export function LanguageToggle() {
+  const { lang, setLang, t } = useLanguage();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    Promise.resolve().then(() => setMounted(true));
-  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -26,8 +20,6 @@ export function ThemeToggle() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open]);
 
-  const current = (mounted ? theme : "system") as (typeof ORDER)[number] | undefined;
-
   return (
     <div ref={ref} className="relative">
       <button
@@ -35,7 +27,7 @@ export function ThemeToggle() {
         onClick={() => setOpen((v) => !v)}
         className="rounded px-2 py-1 text-xs text-neutral-500 hover:bg-neutral-100 hover:text-neutral-800 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
       >
-        {t("mode.mode")}
+        {t("lang.language")}
       </button>
       {open && (
         <div className="absolute right-0 top-full z-20 mt-1 w-28 rounded-md border border-neutral-200 bg-white py-1 text-sm shadow-lg dark:border-neutral-700 dark:bg-neutral-900">
@@ -44,16 +36,16 @@ export function ThemeToggle() {
               key={option}
               type="button"
               onClick={() => {
-                setTheme(option);
+                setLang(option);
                 setOpen(false);
               }}
               className={`flex w-full items-center px-3 py-1.5 text-left ${
-                current === option
+                lang === option
                   ? "bg-neutral-100 font-medium dark:bg-neutral-800"
                   : "hover:bg-neutral-50 dark:hover:bg-neutral-800/60"
               }`}
             >
-              {t(`mode.${option}`)}
+              {t(`lang.${option}`)}
             </button>
           ))}
         </div>

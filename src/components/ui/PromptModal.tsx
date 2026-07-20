@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 type Props = {
   title: string;
@@ -11,6 +12,7 @@ type Props = {
 };
 
 export function PromptModal({ title, initialValue = "", multiline, onSubmit, onCancel }: Props) {
+  const { t } = useLanguage();
   const [value, setValue] = useState(initialValue);
   const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
 
@@ -66,13 +68,13 @@ export function PromptModal({ title, initialValue = "", multiline, onSubmit, onC
             onClick={onCancel}
             className="rounded px-3 py-1 text-sm text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800"
           >
-            취소
+            {t("common.cancel")}
           </button>
           <button
             onClick={submit}
             className="rounded bg-brand px-3 py-1 text-sm font-medium text-brand-foreground hover:opacity-90"
           >
-            확인
+            {t("common.confirm")}
           </button>
         </div>
       </div>

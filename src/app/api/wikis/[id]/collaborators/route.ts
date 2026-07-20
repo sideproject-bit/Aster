@@ -32,10 +32,10 @@ export async function POST(req: NextRequest, { params }: Params) {
 
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user) {
-    return NextResponse.json({ error: "가입된 계정이 없는 이메일입니다" }, { status: 404 });
+    return NextResponse.json({ error: "user_not_found" }, { status: 404 });
   }
   if (user.id === access.wiki.ownerId) {
-    return NextResponse.json({ error: "이미 이 위키의 소유자입니다" }, { status: 400 });
+    return NextResponse.json({ error: "already_owner" }, { status: 400 });
   }
 
   const collaborator = await prisma.wikiCollaborator.upsert({

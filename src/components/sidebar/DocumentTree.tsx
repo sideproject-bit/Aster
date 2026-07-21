@@ -418,13 +418,19 @@ export function DocumentTree() {
           />
         ))}
       </div>
-      <div className="border-t border-neutral-200 px-3 py-2 dark:border-neutral-800">
+      <div className="flex items-center gap-3 border-t border-neutral-200 px-3 py-2 dark:border-neutral-800">
         <button
           onClick={() => router.push(`/w/${wikiId}/graph`)}
           className="text-xs text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200"
         >
           {t("sidebar.viewGraph")}
         </button>
+        <a
+          href={`/api/wikis/${wikiId}/export`}
+          className="text-xs text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200"
+        >
+          {t("sidebar.export")}
+        </a>
       </div>
       {creatingUnder !== undefined && (
         <PromptModal

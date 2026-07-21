@@ -2,22 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-type Star = {
-  xFrac: number;
-  yFrac: number;
-  size: number;
-  baseAlpha: number;
-  twinkleSpeed: number;
-  phase: number;
-};
-
 type OrbitCenter = { cxFrac: number; cyFrac: number };
-
-// A ring with no body on it — just the path itself, permanently visible.
-type OrbitRing = {
-  center: OrbitCenter;
-  radiusFraction: number;
-};
 
 type OrbitBody = {
   kind: "moon" | "planet" | "satellite";
@@ -40,15 +25,6 @@ const CENTERS: OrbitCenter[] = [
   { cxFrac: -0.06, cyFrac: -0.06 }, // top-left
   { cxFrac: 1.06, cyFrac: -0.06 }, // top-right
   { cxFrac: -0.06, cyFrac: 1.06 }, // bottom-left
-];
-
-const ORBIT_RINGS: OrbitRing[] = [
-  { center: CENTERS[0], radiusFraction: 0.85 },
-  { center: CENTERS[1], radiusFraction: 0.75 },
-  { center: CENTERS[2], radiusFraction: 0.7 },
-  { center: { cxFrac: 0.3, cyFrac: 0.15 }, radiusFraction: 0.18 },
-  { center: { cxFrac: 0.78, cyFrac: 0.58 }, radiusFraction: 0.22 },
-  { center: { cxFrac: 0.5, cyFrac: 0.9 }, radiusFraction: 0.3 },
 ];
 
 function makeBodies(): OrbitBody[] {
@@ -120,21 +96,9 @@ function makeBodies(): OrbitBody[] {
   ];
 }
 
-function makeStars(count: number): Star[] {
-  return Array.from({ length: count }, () => ({
-    xFrac: rand(0, 1),
-    yFrac: rand(0, 1),
-    size: rand(0.5, 2),
-    baseAlpha: rand(0.15, 0.5),
-    twinkleSpeed: rand(0.01, 0.03),
-    phase: rand(0, Math.PI * 2),
-  }));
-}
-
 // A pale, all-yellow-toned night-sky background for unauthenticated pages:
-// scattered twinkling stars, a few bare orbit rings, and slow-moving planets/
-// moons/satellites (satellites drawn as a small body + solar panels, not just
-// a dot) trailing fading arcs like a star-trail timelapse.
+// slow-moving planets/moons/satellites (satellites drawn as a small body +
+// solar panels, not just a dot) trailing fading arcs like a star-trail timelapse.
 export function CosmicBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -164,38 +128,13 @@ export function CosmicBackground() {
     resize();
     window.addEventListener("resize", resize);
 
-    const stars = makeStars(90);
     const bodies = makeBodies();
-    let frame = 0;
     let raf = 0;
 
     function yellowRgb(isDark: boolean): string {
       // Matches the app's brand yellow / light-mode link gold, so this stays
       // on-theme without ever needing a non-yellow hue.
       return isDark ? "254, 192, 31" : "146, 102, 10";
-    }
-
-    function drawStars(rgb: string) {
-      for (const s of stars) {
-        const alpha = s.baseAlpha * (0.6 + 0.4 * Math.sin(frame * s.twinkleSpeed + s.phase));
-        ctx!.beginPath();
-        ctx!.fillStyle = `rgba(${rgb}, ${Math.max(0, alpha).toFixed(3)})`;
-        ctx!.arc(s.xFrac * width, s.yFrac * height, s.size, 0, Math.PI * 2);
-        ctx!.fill();
-      }
-    }
-
-    function drawOrbitRings(rgb: string) {
-      for (const ring of ORBIT_RINGS) {
-        const cx = ring.center.cxFrac * width;
-        const cy = ring.center.cyFrac * height;
-        const radius = ring.radiusFraction * Math.max(width, height);
-        ctx!.beginPath();
-        ctx!.strokeStyle = `rgba(${rgb}, 0.12)`;
-        ctx!.lineWidth = 1;
-        ctx!.arc(cx, cy, radius, 0, Math.PI * 2);
-        ctx!.stroke();
-      }
     }
 
     function drawSatelliteShape(x: number, y: number, size: number, angle: number, rgb: string) {
@@ -284,11 +223,8 @@ export function CosmicBackground() {
       const isDark = document.documentElement.classList.contains("dark");
       const rgb = yellowRgb(isDark);
 
-      drawStars(rgb);
-      drawOrbitRings(rgb);
       drawBodies(rgb);
 
-      frame += 1;
       raf = requestAnimationFrame(tick);
     }
     raf = requestAnimationFrame(tick);

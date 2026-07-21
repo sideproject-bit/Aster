@@ -1,7 +1,9 @@
 import { getViewableWiki } from "@/lib/wikiAccess";
 import { DocumentsProvider } from "@/context/DocumentsContext";
 import { DocumentTree } from "@/components/sidebar/DocumentTree";
+import { ResizableSidebar } from "@/components/sidebar/ResizableSidebar";
 import { NoAccessMessage } from "@/components/NoAccessMessage";
+import { ScrollRestoringMain } from "@/components/ScrollRestoringMain";
 
 export default async function WikiLayout({
   children,
@@ -19,10 +21,10 @@ export default async function WikiLayout({
 
   return (
     <DocumentsProvider wikiId={wikiId} isOwner={access.isOwner}>
-      <aside className="w-64 shrink-0 border-r border-divider">
+      <ResizableSidebar>
         <DocumentTree />
-      </aside>
-      <main className="flex-1 overflow-y-auto">{children}</main>
+      </ResizableSidebar>
+      <ScrollRestoringMain>{children}</ScrollRestoringMain>
     </DocumentsProvider>
   );
 }

@@ -131,7 +131,7 @@ export function WikisDashboard() {
   const collaborating = wikis?.filter((w) => w.role === "editor") ?? [];
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-8 py-10">
+    <div className="mx-auto w-full max-w-4xl px-8 pt-10 pb-24">
       <input
         ref={coverInputRef}
         type="file"
@@ -180,7 +180,7 @@ export function WikisDashboard() {
             {owned.map((wiki) => (
               <li
                 key={wiki.id}
-                className="rounded-lg border border-card-border px-4 py-3"
+                className="rounded-lg border border-divider bg-card-bg px-4 py-3"
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -256,7 +256,7 @@ export function WikisDashboard() {
             {collaborating.map((wiki) => (
               <li
                 key={wiki.id}
-                className="flex items-center justify-between rounded-lg border border-card-border px-4 py-3"
+                className="flex items-center justify-between rounded-lg border border-divider bg-card-bg px-4 py-3"
               >
                 <div>
                   <Link href={`/w/${wiki.id}`} className="font-medium text-link hover:underline">
@@ -378,8 +378,8 @@ function FolderTabCard({
 }) {
   return (
     <div className="relative pt-2.5">
-      <div className="absolute left-3 top-0 h-2.5 w-12 rounded-t-md border border-b-0 border-card-border bg-card-border/10" />
-      <div className="relative aspect-[4/3] overflow-hidden rounded-lg border-2 border-card-border">
+      <div className="absolute left-3 top-0 h-2.5 w-12 rounded-t-md border border-b-0 border-divider bg-card-bg" />
+      <div className="relative aspect-[4/3] overflow-hidden rounded-lg border border-divider bg-card-bg">
         <button onClick={onOpen} className="absolute inset-0 flex h-full w-full items-center justify-center">
           {wiki.coverImageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element

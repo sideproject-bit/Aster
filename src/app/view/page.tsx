@@ -65,6 +65,12 @@ export default function ViewLandingPage() {
 
   return (
     <div className="mx-auto w-full max-w-lg px-8 py-16">
+      <Link
+        href={sessionStatus === "authenticated" ? "/wikis" : "/"}
+        className="mb-6 inline-block text-sm text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200"
+      >
+        {t("view.backHome")}
+      </Link>
       <h1 className="mb-2 text-2xl font-semibold">{t("view.landingTitle")}</h1>
       <p className="mb-6 text-neutral-500">{t("view.landingHint")}</p>
 
@@ -99,7 +105,7 @@ export default function ViewLandingPage() {
               {bookmarks.map((b) => (
                 <li
                   key={b.id}
-                  className="flex items-center justify-between rounded-lg border border-card-border px-4 py-3"
+                  className="flex items-center justify-between rounded-lg border border-divider bg-card-bg px-4 py-3"
                 >
                   <div>
                     <Link

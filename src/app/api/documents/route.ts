@@ -60,6 +60,15 @@ export async function POST(req: NextRequest) {
     return !!existing;
   });
 
+  // Default order is creation order: append after the current last sibling,
+  // rather than leaving every new document tied at 0 (which made the tree
+  // fall back to sorting by title instead).
+  const maxOrder = await prisma.document.aggregate({
+    where: { wikiId, parentId },
+    _max: { order: true },
+  });
+  const order = (maxOrder._max.order ?? -1) + 1;
+
   const document = await prisma.document.create({
     data: {
       wikiId,
@@ -67,6 +76,7 @@ export async function POST(req: NextRequest) {
       title,
       slug,
       isFolder,
+      order,
       content: body.content ?? EMPTY_DOC,
     },
   });

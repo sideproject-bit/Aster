@@ -256,7 +256,7 @@ export function Editor({
   return (
     <div ref={containerRef}>
       {editable && (
-      <div className="mb-2 flex flex-wrap items-center gap-1 border-b border-neutral-200 pb-2 dark:border-neutral-800">
+      <div className="sticky top-0 z-10 mb-2 flex flex-wrap items-center gap-1 border-b border-neutral-200 bg-background pb-2 dark:border-neutral-800">
         <ToolbarButton
           active={editor.isActive("heading", { level: 2 })}
           title={t("editor.h2")}

@@ -118,7 +118,7 @@ export default function ViewDocumentPage() {
         )}
       </div>
 
-      <div className="mb-6 flex flex-wrap items-center gap-x-4 gap-y-1 rounded border border-card-border px-3 py-1.5 text-xs text-neutral-500">
+      <div className="mb-6 flex flex-wrap items-center gap-x-4 gap-y-1 rounded border border-divider bg-card-bg px-3 py-1.5 text-xs text-neutral-500">
         <span>
           <span className="uppercase tracking-wide text-neutral-400 dark:text-neutral-600">
             {t("doc.card.filed")}

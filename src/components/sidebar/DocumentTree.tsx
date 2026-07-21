@@ -236,12 +236,13 @@ function TreeNode({
 }
 
 export function DocumentTree() {
-  const { wikiId, isOwner, documents, childrenOf, loading, refresh, isDescendant } =
+  const { wikiId, isOwner, documents, childrenOf, loading, refresh, isDescendant, byId, docPath } =
     useDocuments();
   const { t } = useLanguage();
   const router = useRouter();
   const params = useParams<{ docId?: string }>();
   const roots = childrenOf(null);
+  const currentDoc = params.docId ? byId(params.docId) : undefined;
   const [creatingUnder, setCreatingUnder] = useState<string | null | undefined>(undefined);
   const [creatingFolder, setCreatingFolder] = useState(false);
   const [draggedId, setDraggedId] = useState<string | null>(null);
@@ -258,10 +259,22 @@ export function DocumentTree() {
       body: JSON.stringify({ wikiId, title, parentId, isFolder: creatingFolder }),
     });
     const created = await res.json();
+
+    // Slot the new document in right after whichever document is currently
+    // open, instead of leaving it appended at the end, when they share a parent.
+    if (!creatingFolder && currentDoc && currentDoc.parentId === parentId) {
+      const updates = buildReorderUpdates([...documents, created], created.id, currentDoc.id, "after");
+      await fetch("/api/documents/reorder", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ wikiId, updates }),
+      });
+    }
+
     await refresh();
     setCreatingUnder(undefined);
     setCreatingFolder(false);
-    if (!creatingFolder) router.push(`/w/${wikiId}/wiki/${created.id}`);
+    if (!creatingFolder) router.push(docPath(created.id));
   }
 
   function requestNew(parentId: string | null, isFolder: boolean) {
@@ -346,7 +359,7 @@ export function DocumentTree() {
             <button
               className="text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200 text-lg leading-none"
               title={t("sidebar.newDocument")}
-              onClick={() => requestNew(null, false)}
+              onClick={() => requestNew(currentDoc?.parentId ?? null, false)}
             >
               +
             </button>

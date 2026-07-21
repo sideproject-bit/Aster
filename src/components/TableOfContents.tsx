@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type RefObject } from "react";
-import type { HeadingEntry } from "@/lib/toc";
+import { numberHeadings, type HeadingEntry } from "@/lib/toc";
 import { useLanguage } from "@/context/LanguageContext";
 
 type Props = {
@@ -16,14 +16,7 @@ export function TableOfContents({ headings, containerRef }: Props) {
   if (headings.length < 2) return null;
 
   const minLevel = Math.min(...headings.map((h) => h.level));
-  const counters: number[] = [];
-
-  function numberFor(level: number): string {
-    const depth = level - minLevel;
-    counters.length = depth + 1;
-    counters[depth] = (counters[depth] ?? 0) + 1;
-    return counters.slice(0, depth + 1).join(".");
-  }
+  const numbers = numberHeadings(headings.map((h) => h.level));
 
   function scrollTo(index: number) {
     const el = containerRef.current?.querySelectorAll("h1, h2, h3, h4, h5, h6")[index];
@@ -51,7 +44,7 @@ export function TableOfContents({ headings, containerRef }: Props) {
                 onClick={() => scrollTo(i)}
                 className="text-left text-link hover:underline"
               >
-                {numberFor(h.level)}. {h.text}
+                {numbers[i]}. {h.text}
               </button>
             </li>
           ))}

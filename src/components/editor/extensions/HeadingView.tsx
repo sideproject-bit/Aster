@@ -1,40 +1,54 @@
 "use client";
 
 import { NodeViewWrapper, NodeViewContent, type NodeViewProps } from "@tiptap/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
+import { numberHeadings } from "@/lib/toc";
+import { collapsibleHeadingPluginKey } from "./CollapsibleHeading";
 
 const TAGS = ["h1", "h2", "h3", "h4", "h5", "h6"] as const;
 
 export function HeadingView({ node, editor, getPos }: NodeViewProps) {
   const { t } = useLanguage();
   const [collapsed, setCollapsed] = useState(false);
+  const [number, setNumber] = useState("");
+
+  // Recomputes this heading's position number whenever the doc changes.
+  // Section fold/unfold itself is handled by the collapsibleHeading
+  // ProseMirror plugin's decorations, not here.
+  useEffect(() => {
+    function recompute() {
+      const myPos = getPos();
+      if (typeof myPos !== "number") return;
+
+      const levels: number[] = [];
+      const positions: number[] = [];
+      editor.state.doc.descendants((n, pos) => {
+        if (n.type.name === "heading") {
+          levels.push(n.attrs.level as number);
+          positions.push(pos);
+        }
+      });
+      const myIndex = positions.indexOf(myPos);
+      if (myIndex !== -1) {
+        setNumber(numberHeadings(levels)[myIndex]);
+      }
+    }
+    recompute();
+    editor.on("update", recompute);
+    return () => {
+      editor.off("update", recompute);
+    };
+  }, [editor, getPos]);
+
   const level: number = node.attrs.level ?? 2;
   const Tag = TAGS[level - 1] ?? "h2";
 
   function toggle() {
     const pos = getPos();
     if (typeof pos !== "number") return;
-    const thisNode = editor.state.doc.nodeAt(pos);
-    if (!thisNode) return;
-
     const nextCollapsed = !collapsed;
-    const docSize = editor.state.doc.content.size;
-    let cursor = pos + thisNode.nodeSize;
-
-    // Walk forward through top-level siblings (via the document model, not DOM tag
-    // names — every node view's outer DOM element is a plain <div> regardless of
-    // the tag rendered inside it) until the next heading of equal-or-shallower level.
-    while (cursor < docSize) {
-      const node = editor.state.doc.nodeAt(cursor);
-      if (!node) break;
-      if (node.type.name === "heading" && (node.attrs.level as number) <= level) break;
-      const dom = editor.view.nodeDOM(cursor);
-      if (dom instanceof HTMLElement) {
-        dom.style.display = nextCollapsed ? "none" : "";
-      }
-      cursor += node.nodeSize;
-    }
+    editor.view.dispatch(editor.state.tr.setMeta(collapsibleHeadingPluginKey, { pos, collapsed: nextCollapsed }));
     setCollapsed(nextCollapsed);
   }
 
@@ -50,6 +64,15 @@ export function HeadingView({ node, editor, getPos }: NodeViewProps) {
       >
         {collapsed ? "▶" : "▼"}
       </button>
+      {number && (
+        <span
+          contentEditable={false}
+          className="select-none text-[0.7em] font-normal text-neutral-400 dark:text-neutral-500"
+          style={{ userSelect: "none" }}
+        >
+          {number}
+        </span>
+      )}
       <NodeViewContent<"span"> as="span" className="flex-1" />
     </NodeViewWrapper>
   );

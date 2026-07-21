@@ -75,6 +75,7 @@ export function Editor({
   useEffect(() => {
     onSaveRef.current = onSave;
   }, [onSave]);
+  const isComposingRef = useRef(false);
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -143,14 +144,36 @@ export function Editor({
   });
 
   // Keep the editor content in sync when switching between documents.
+  // Skipped mid-IME-composition: `content` lags one keystroke behind while
+  // composing (it's only updated from `onUpdate`, which fires after the
+  // composition commits), so syncing here can overwrite the character
+  // that's still being composed if the editor loses focus before it commits.
   useEffect(() => {
     if (!editor) return;
+    if (isComposingRef.current) return;
     const current = JSON.stringify(editor.getJSON());
     const next = JSON.stringify(content);
     if (current !== next) {
       editor.commands.setContent(content);
     }
   }, [editor, content]);
+
+  useEffect(() => {
+    if (!editor) return;
+    const dom = editor.view.dom;
+    function handleCompositionStart() {
+      isComposingRef.current = true;
+    }
+    function handleCompositionEnd() {
+      isComposingRef.current = false;
+    }
+    dom.addEventListener("compositionstart", handleCompositionStart);
+    dom.addEventListener("compositionend", handleCompositionEnd);
+    return () => {
+      dom.removeEventListener("compositionstart", handleCompositionStart);
+      dom.removeEventListener("compositionend", handleCompositionEnd);
+    };
+  }, [editor]);
 
   // useEditor only applies the `editable` option at creation time — toggling preview
   // mode changes the prop, but without this the underlying editor (and node views like
@@ -256,7 +279,7 @@ export function Editor({
   return (
     <div ref={containerRef}>
       {editable && (
-      <div className="sticky top-0 z-10 mb-2 flex flex-wrap items-center gap-1 border-b border-neutral-200 bg-background pb-2 dark:border-neutral-800">
+      <div className="sticky top-0 z-10 mb-2 flex flex-wrap items-center gap-1 border-b border-neutral-200 bg-background pt-3 pb-2 dark:border-neutral-800">
         <ToolbarButton
           active={editor.isActive("heading", { level: 2 })}
           title={t("editor.h2")}

@@ -303,6 +303,10 @@ export function DocumentTree() {
 
   async function onDrop(e: React.DragEvent, targetId: string) {
     e.preventDefault();
+    // Without this, the drop also bubbles to the tree container's own onDrop
+    // (meant for dropping on empty space below the tree), which immediately
+    // re-moves the same document to root — undoing the reorder just applied.
+    e.stopPropagation();
     if (draggedId && dropTarget && dropTarget.id === targetId) {
       const updates = buildReorderUpdates(documents, draggedId, targetId, dropTarget.position);
       setDraggedId(null);

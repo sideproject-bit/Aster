@@ -21,10 +21,12 @@ export default async function ViewWikiLayout({
 
   return (
     <DocumentsProvider wikiId={wikiId} isOwner={false} mode="view">
-      <ResizableSidebar>
-        <ViewSidebar />
-      </ResizableSidebar>
-      <ScrollRestoringMain>{children}</ScrollRestoringMain>
+      <div className="flex h-[calc(100dvh-3rem)] w-full overflow-hidden">
+        <ResizableSidebar>
+          <ViewSidebar />
+        </ResizableSidebar>
+        <ScrollRestoringMain>{children}</ScrollRestoringMain>
+      </div>
     </DocumentsProvider>
   );
 }

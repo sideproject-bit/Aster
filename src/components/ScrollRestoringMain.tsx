@@ -3,10 +3,33 @@
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 
-// Keyed by pathname, so each document remembers its own scroll position
-// independently. Module-level (not component state) so it survives the
-// layout's <main> persisting across doc-to-doc navigation within a wiki.
-const scrollPositions = new Map<string, number>();
+const STORAGE_KEY = "aster-scroll-positions";
+
+// Persisted (not just in-memory) so a dev-mode Fast Refresh reload — or an
+// actual page reload — doesn't wipe out where the user was scrolled to.
+// Keyed by pathname, so each document remembers its own position independently.
+function loadPositions(): Record<string, number> {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = window.sessionStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+function savePosition(pathname: string, scrollTop: number) {
+  if (typeof window === "undefined") return;
+  const positions = loadPositions();
+  positions[pathname] = scrollTop;
+  try {
+    window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(positions));
+  } catch {
+    // sessionStorage can throw in private-browsing edge cases — scroll
+    // restoration just silently stops working, nothing else depends on it.
+  }
+}
+
 let isPopNavigation = false;
 
 if (typeof window !== "undefined") {
@@ -31,7 +54,7 @@ export function ScrollRestoringMain({ children }: { children: React.ReactNode })
 
     const wasPop = isPopNavigation;
     isPopNavigation = false;
-    const target = wasPop ? scrollPositions.get(pathname) ?? 0 : 0;
+    const target = wasPop ? (loadPositions()[pathname] ?? 0) : 0;
 
     let attempts = 0;
     let timer: ReturnType<typeof setTimeout>;
@@ -51,7 +74,7 @@ export function ScrollRestoringMain({ children }: { children: React.ReactNode })
     tryRestore();
 
     function handleScroll() {
-      scrollPositions.set(pathname, el!.scrollTop);
+      savePosition(pathname, el!.scrollTop);
     }
     el.addEventListener("scroll", handleScroll);
     return () => {

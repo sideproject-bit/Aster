@@ -131,7 +131,7 @@ export function WikisDashboard() {
   const collaborating = wikis?.filter((w) => w.role === "editor") ?? [];
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-8 pt-10 pb-24">
+    <div className="mx-auto w-full max-w-4xl px-8 py-10">
       <input
         ref={coverInputRef}
         type="file"

@@ -46,12 +46,12 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} ${asterFont.variable} h-full antialiased`}
     >
-      <body className="h-dvh overflow-hidden flex flex-col">
+      <body className="min-h-dvh flex flex-col">
         <LanguageProvider>
           <SessionProviderWrapper>
             <ThemeProviderWrapper>
               <TopBar />
-              <div className="flex flex-1 min-h-0 overflow-y-auto">{children}</div>
+              <div className="flex flex-1">{children}</div>
             </ThemeProviderWrapper>
           </SessionProviderWrapper>
         </LanguageProvider>

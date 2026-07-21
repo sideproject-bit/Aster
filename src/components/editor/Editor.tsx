@@ -15,7 +15,6 @@ import { Footnote } from "./extensions/Footnote";
 import { EditorShortcuts } from "./extensions/EditorShortcuts";
 import { CollapsibleHeading } from "./extensions/CollapsibleHeading";
 import { CustomTableCell, CustomTableHeader } from "./extensions/CustomTableCell";
-import { PromptModal } from "@/components/ui/PromptModal";
 import { ColorSwatches } from "./ColorSwatches";
 import { ShortcutsHelp } from "./ShortcutsHelp";
 import { ContextMenu, type ContextMenuItem } from "@/components/ui/ContextMenu";
@@ -69,7 +68,6 @@ export function Editor({
 }: Props) {
   const { t } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [addingFootnote, setAddingFootnote] = useState(false);
   const [editorMenu, setEditorMenu] = useState<{ x: number; y: number } | null>(null);
   const onSaveRef = useRef(onSave);
   useEffect(() => {
@@ -210,10 +208,9 @@ export function Editor({
     editor.chain().focus().setImage({ src: url }).run();
   }
 
-  function insertFootnote(text: string) {
-    setAddingFootnote(false);
+  function insertFootnote() {
     if (!editor) return;
-    editor.chain().focus().insertContent({ type: "footnote", attrs: { text } }).run();
+    editor.chain().focus().insertContent({ type: "footnote", attrs: { content: null } }).run();
   }
 
   function handleEditorContextMenu(e: React.MouseEvent) {
@@ -265,7 +262,7 @@ export function Editor({
     {
       label: t("editor.footnoteAdd"),
       icon: <FootnoteIcon className="h-3.5 w-3.5" />,
-      onClick: () => setAddingFootnote(true),
+      onClick: insertFootnote,
     },
     {
       label: t("editor.docLinkInsert"),
@@ -354,7 +351,7 @@ export function Editor({
               : editor.chain().focus().unsetHighlight().run()
           }
         />
-        <ToolbarButton title={t("editor.footnoteAdd")} onClick={() => setAddingFootnote(true)}>
+        <ToolbarButton title={t("editor.footnoteAdd")} onClick={insertFootnote}>
           <FootnoteIcon className="h-4 w-4" />
         </ToolbarButton>
         <ToolbarButton title={t("editor.image")} onClick={handleImageButton}>
@@ -430,14 +427,6 @@ export function Editor({
           y={editorMenu.y}
           items={editorMenuItems}
           onClose={() => setEditorMenu(null)}
-        />
-      )}
-      {addingFootnote && (
-        <PromptModal
-          title={t("editor.footnotePromptTitle")}
-          multiline
-          onSubmit={insertFootnote}
-          onCancel={() => setAddingFootnote(false)}
         />
       )}
     </div>

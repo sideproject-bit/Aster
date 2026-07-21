@@ -210,7 +210,6 @@ export const dictionaries: Record<Lang, Record<string, string>> = {
     "editor.deleteTable": "Delete table",
     "editor.wikiLinkHint": "[[ or Ctrl/⌘+K to link a document",
     "editor.wikiLinkHintTitle": 'e.g. [[Document Name|here',
-    "editor.footnotePromptTitle": "Footnote content",
     "editor.docLinkInsert": "Insert document link",
     "editor.noColor": "No color",
 
@@ -232,8 +231,7 @@ export const dictionaries: Record<Lang, Record<string, string>> = {
     "heading.collapse": "Collapse",
     "heading.expand": "Expand",
 
-    "footnote.editHint": "Click to edit footnote content",
-    "footnote.promptTitle": "Footnote content",
+    "footnote.editHint": "Click to view/edit footnote content",
 
     "wikiLink.notCreatedHint": '"{title}" doesn\'t exist yet.',
     "wikiLink.clickToCreate": " Click to create it",
@@ -528,7 +526,6 @@ export const dictionaries: Record<Lang, Record<string, string>> = {
     "editor.deleteTable": "표 삭제",
     "editor.wikiLinkHint": "[[ 또는 Ctrl/⌘+K 로 문서 링크",
     "editor.wikiLinkHintTitle": "예: [[문서 이름|여기",
-    "editor.footnotePromptTitle": "각주 내용",
     "editor.docLinkInsert": "문서 링크 삽입",
     "editor.noColor": "색상 없음",
 
@@ -550,8 +547,7 @@ export const dictionaries: Record<Lang, Record<string, string>> = {
     "heading.collapse": "접기",
     "heading.expand": "펼치기",
 
-    "footnote.editHint": "클릭하여 각주 내용 입력",
-    "footnote.promptTitle": "각주 내용",
+    "footnote.editHint": "클릭하여 각주 내용 보기/편집",
 
     "wikiLink.notCreatedHint": '"{title}" 문서가 아직 없습니다.',
     "wikiLink.clickToCreate": " 클릭하여 생성",

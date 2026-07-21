@@ -164,7 +164,7 @@ export default function ViewDocumentPage() {
       />
 
       {footnotes.length > 0 && (
-        <div className="mt-10 border-t border-card-border pt-4 text-sm">
+        <div className="mt-10 border-t border-divider pt-4 text-sm">
           <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-500">
             {t("doc.footnotesTitle")}
           </h2>
@@ -177,7 +177,7 @@ export default function ViewDocumentPage() {
       )}
 
       {kids.length > 0 && (
-        <div className="mt-10 border-t border-card-border pt-4 text-sm">
+        <div className="mt-10 border-t border-divider pt-4 text-sm">
           <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-500">
             {t("doc.subdocsTitle")}
           </h2>

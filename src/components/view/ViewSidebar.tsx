@@ -48,7 +48,7 @@ export function ViewSidebar() {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="border-b border-card-border px-3 py-2">
+      <div className="border-b border-divider px-3 py-2">
         <span className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
           {t("sidebar.documents")}
         </span>

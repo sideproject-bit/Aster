@@ -19,7 +19,7 @@ export default async function WikiLayout({
 
   return (
     <DocumentsProvider wikiId={wikiId} isOwner={access.isOwner}>
-      <aside className="w-64 shrink-0 border-r border-card-border">
+      <aside className="w-64 shrink-0 border-r border-divider">
         <DocumentTree />
       </aside>
       <main className="flex-1 overflow-y-auto">{children}</main>

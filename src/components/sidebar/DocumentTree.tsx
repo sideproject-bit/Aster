@@ -330,7 +330,7 @@ export function DocumentTree() {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center justify-between px-3 py-2 border-b border-card-border">
+      <div className="flex items-center justify-between px-3 py-2 border-b border-divider">
         <span className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
           {t("sidebar.documents")}
         </span>

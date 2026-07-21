@@ -76,7 +76,7 @@ export default function ViewLandingPage() {
             setError(false);
           }}
           placeholder={t("view.linkPlaceholder")}
-          className="flex-1 rounded border border-card-border bg-transparent px-3 py-2 text-sm outline-none focus:border-brand"
+          className="flex-1 rounded border border-neutral-300 bg-transparent px-3 py-2 text-sm outline-none focus:border-brand dark:border-neutral-700"
         />
         <button
           type="submit"

@@ -19,7 +19,7 @@ export default async function ViewWikiLayout({
 
   return (
     <DocumentsProvider wikiId={wikiId} isOwner={false} mode="view">
-      <aside className="w-64 shrink-0 border-r border-card-border">
+      <aside className="w-64 shrink-0 border-r border-divider">
         <ViewSidebar />
       </aside>
       <main className="flex-1 overflow-y-auto">{children}</main>

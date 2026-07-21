@@ -31,7 +31,7 @@ export function TableOfContents({ headings, containerRef }: Props) {
   }
 
   return (
-    <div className="mb-6 rounded-lg border border-card-border">
+    <div className="mb-6 rounded-lg border border-divider">
       <button
         type="button"
         onClick={() => setExpanded((v) => !v)}

@@ -93,6 +93,60 @@ function makeBodies(): OrbitBody[] {
       size: 8,
       trailSpan: 0.7,
     },
+    {
+      kind: "moon",
+      center: CENTERS[0],
+      radiusFraction: 0.2,
+      angle: rand(0, Math.PI * 2),
+      angularSpeed: rand(0.0024, 0.003),
+      size: 3,
+      trailSpan: 0.55,
+    },
+    {
+      kind: "satellite",
+      center: CENTERS[0],
+      radiusFraction: 0.78,
+      angle: rand(0, Math.PI * 2),
+      angularSpeed: rand(0.0026, 0.0034),
+      size: 2,
+      trailSpan: 0.4,
+    },
+    {
+      kind: "moon",
+      center: CENTERS[1],
+      radiusFraction: 0.2,
+      angle: rand(0, Math.PI * 2),
+      angularSpeed: -rand(0.0022, 0.0028),
+      size: 3.5,
+      trailSpan: 0.55,
+    },
+    {
+      kind: "satellite",
+      center: CENTERS[1],
+      radiusFraction: 0.72,
+      angle: rand(0, Math.PI * 2),
+      angularSpeed: -rand(0.0038, 0.0048),
+      size: 2.2,
+      trailSpan: 0.4,
+    },
+    {
+      kind: "satellite",
+      center: CENTERS[2],
+      radiusFraction: 0.65,
+      angle: rand(0, Math.PI * 2),
+      angularSpeed: rand(0.003, 0.004),
+      size: 2.5,
+      trailSpan: 0.4,
+    },
+    {
+      kind: "moon",
+      center: CENTERS[2],
+      radiusFraction: 0.18,
+      angle: rand(0, Math.PI * 2),
+      angularSpeed: rand(0.0025, 0.0032),
+      size: 3,
+      trailSpan: 0.5,
+    },
   ];
 }
 
@@ -141,8 +195,12 @@ export function CosmicBackground() {
       ctx!.save();
       ctx!.translate(x, y);
       ctx!.rotate(angle);
-      ctx!.fillStyle = `rgba(${rgb}, 0.75)`;
+      // The body rect sits exactly on the orbit path, so it must be fully
+      // opaque — otherwise the trail line drawn underneath shows through as
+      // a seam once the two semi-transparent layers are composited.
+      ctx!.fillStyle = `rgba(${rgb}, 1)`;
       ctx!.fillRect(-size * 0.4, -size * 0.3, size * 0.8, size * 0.6);
+      ctx!.fillStyle = `rgba(${rgb}, 0.75)`;
       ctx!.fillRect(-size * 1.6, -size * 0.12, size * 1.1, size * 0.24);
       ctx!.fillRect(size * 0.5, -size * 0.12, size * 1.1, size * 0.24);
       ctx!.strokeStyle = `rgba(${rgb}, 0.6)`;
@@ -200,8 +258,11 @@ export function CosmicBackground() {
           ctx!.restore();
         }
 
+        // Fully opaque: this circle sits right on the orbit path, so it must
+        // completely cover the trail line drawn underneath it — otherwise the
+        // two semi-transparent layers composite into a visible seam.
         ctx!.beginPath();
-        ctx!.fillStyle = `rgba(${rgb}, 0.65)`;
+        ctx!.fillStyle = `rgba(${rgb}, 1)`;
         ctx!.arc(bx, by, body.size, 0, Math.PI * 2);
         ctx!.fill();
 

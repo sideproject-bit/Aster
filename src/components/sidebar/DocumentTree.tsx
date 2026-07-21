@@ -174,7 +174,7 @@ function TreeNode({
             onClick={(e) => e.stopPropagation()}
             onBlur={saveRename}
             onKeyDown={(e) => {
-              if (e.key === "Enter") (e.currentTarget as HTMLInputElement).blur();
+              if (e.key === "Enter" && !e.nativeEvent.isComposing) (e.currentTarget as HTMLInputElement).blur();
               if (e.key === "Escape") {
                 setTitleDraft(doc.title);
                 onRequestRename(null);

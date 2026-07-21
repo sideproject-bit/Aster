@@ -51,7 +51,7 @@ export function PasswordConfirmModal({
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && submit()}
+          onKeyDown={(e) => e.key === "Enter" && !e.nativeEvent.isComposing && submit()}
           className="w-full rounded border border-neutral-300 bg-transparent px-2 py-1 text-sm outline-none focus:border-neutral-500 dark:border-neutral-700"
         />
         {error && <p className="mt-1 text-xs text-red-500">{error}</p>}

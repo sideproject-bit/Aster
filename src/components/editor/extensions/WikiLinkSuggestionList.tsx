@@ -42,7 +42,7 @@ export const WikiLinkSuggestionList = forwardRef<WikiLinkSuggestionListHandle, P
           setSelected((v) => (v - 1 + items.length) % Math.max(items.length, 1));
           return true;
         }
-        if (event.key === "Enter") {
+        if (event.key === "Enter" && !event.isComposing) {
           const item = items[selected];
           if (item) command(item);
           return true;

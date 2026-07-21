@@ -168,7 +168,9 @@ export default function DocumentPage() {
             value={titleDraft}
             onChange={(e) => setTitleDraft(e.target.value)}
             onBlur={handleTitleBlur}
-            onKeyDown={(e) => e.key === "Enter" && (e.currentTarget as HTMLInputElement).blur()}
+            onKeyDown={(e) =>
+              e.key === "Enter" && !e.nativeEvent.isComposing && (e.currentTarget as HTMLInputElement).blur()
+            }
             className="flex-1 border-none bg-transparent text-3xl font-bold outline-none"
           />
         ) : (

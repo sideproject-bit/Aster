@@ -131,7 +131,7 @@ export function TagPicker({ wikiId, tags, onChange }: Props) {
               <input
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && createTag()}
+                onKeyDown={(e) => e.key === "Enter" && !e.nativeEvent.isComposing && createTag()}
                 placeholder={t("tagPicker.newTagName")}
                 className="min-w-0 flex-1 rounded border border-neutral-300 bg-transparent px-2 py-1 text-xs outline-none focus:border-neutral-500 dark:border-neutral-700"
               />

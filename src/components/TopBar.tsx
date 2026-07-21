@@ -22,7 +22,9 @@ export function TopBar() {
     fetch("/api/wikis")
       .then((res) => res.json())
       .then(setWikis);
-  }, [status]);
+    // Re-fetch whenever the active record changes (e.g. after creating or switching to
+    // one) — otherwise a client-side navigation keeps this stale from the last fetch.
+  }, [status, params.wikiId]);
 
   return (
     <header className="flex h-12 shrink-0 items-center justify-between border-b border-neutral-200 px-4 dark:border-neutral-800">

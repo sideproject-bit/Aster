@@ -46,7 +46,7 @@ export function PromptModal({ title, initialValue = "", multiline, onSubmit, onC
             onChange={(e) => setValue(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Escape") onCancel();
-              if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) submit();
+              if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && !e.nativeEvent.isComposing) submit();
             }}
             rows={3}
             className="w-full rounded border border-neutral-300 bg-transparent px-2 py-1 text-sm outline-none focus:border-neutral-500 dark:border-neutral-700"
@@ -58,7 +58,7 @@ export function PromptModal({ title, initialValue = "", multiline, onSubmit, onC
             onChange={(e) => setValue(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Escape") onCancel();
-              if (e.key === "Enter") submit();
+              if (e.key === "Enter" && !e.nativeEvent.isComposing) submit();
             }}
             className="w-full rounded border border-neutral-300 bg-transparent px-2 py-1 text-sm outline-none focus:border-neutral-500 dark:border-neutral-700"
           />

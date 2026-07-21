@@ -67,3 +67,71 @@ body {
     animation: none;
   }
 }
+
+/* Tiptap's Table extension only supplies the *behavior* (column resize,
+   cell selection) — none of this is styled by @tailwindcss/typography's
+   `.prose`, which doesn't know about Tiptap's table DOM (tableWrapper,
+   colgroup, the resize handle), so without this a table has no visible
+   grid at all and the resize handle is present but invisible/unusable. */
+.tiptap .tableWrapper {
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+
+.tiptap table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+  margin: 0;
+}
+
+.tiptap table td,
+.tiptap table th {
+  border: 1px solid #d4d4d4;
+  box-sizing: border-box;
+  min-width: 3em;
+  padding: 6px 10px;
+  position: relative;
+  vertical-align: top;
+}
+
+.dark .tiptap table td,
+.dark .tiptap table th {
+  border-color: #525252;
+}
+
+.tiptap table th {
+  font-weight: 600;
+  text-align: left;
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.dark .tiptap table th {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.tiptap table .selectedCell {
+  position: relative;
+}
+
+.tiptap table .selectedCell:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(254, 192, 31, 0.2);
+  pointer-events: none;
+}
+
+.tiptap table .column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: -2px;
+  width: 4px;
+  background-color: var(--brand);
+  pointer-events: none;
+}
+
+.tiptap.resize-cursor {
+  cursor: col-resize;
+}

@@ -77,6 +77,10 @@ export function Editor({
 
   const editor = useEditor({
     immediatelyRender: false,
+    // Tiptap v3 defaults this to false (unlike v2), so selection-only changes
+    // (e.g. clicking into a table cell) wouldn't re-render the toolbar's
+    // `editor.isActive(...)`-gated buttons like the table row/column controls.
+    shouldRerenderOnTransaction: true,
     editable,
     extensions: [
       StarterKit.configure({ heading: false }),

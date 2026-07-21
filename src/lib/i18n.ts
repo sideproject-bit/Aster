@@ -235,6 +235,8 @@ export const dictionaries: Record<Lang, Record<string, string>> = {
 
     "wikiLink.notCreatedHint": '"{title}" doesn\'t exist yet.',
     "wikiLink.clickToCreate": " Click to create it",
+    "wikiLink.editLabelHint": "Edit display text",
+    "wikiLink.editLabelPromptTitle": "Display text",
 
     "wikiLinkSuggest.noMatch": "No matching documents — press Enter to create one",
     "wikiLinkSuggest.createNew": 'Create "{title}"',
@@ -551,6 +553,8 @@ export const dictionaries: Record<Lang, Record<string, string>> = {
 
     "wikiLink.notCreatedHint": '"{title}" 문서가 아직 없습니다.',
     "wikiLink.clickToCreate": " 클릭하여 생성",
+    "wikiLink.editLabelHint": "표시 텍스트 수정",
+    "wikiLink.editLabelPromptTitle": "표시할 텍스트",
 
     "wikiLinkSuggest.noMatch": "일치하는 문서 없음 — Enter로 새 문서 생성",
     "wikiLinkSuggest.createNew": '"{title}" 새로 만들기',

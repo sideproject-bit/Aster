@@ -16,7 +16,7 @@ type Burst = {
   t: number;
 };
 
-const METEOR_COUNT = 14;
+const METEOR_COUNT = 5;
 const BURST_FRAMES = 20;
 
 function rand(min: number, max: number) {
@@ -59,7 +59,7 @@ export function MeteorShower() {
       return {
         x: rand(0, width),
         y: rand(-height * 0.4, -10),
-        vx: rand(1.2, 2.4),
+        vx: rand(-2.4, -1.2),
         vy: rand(2.2, 4),
         len: rand(60, 120),
       };
@@ -101,7 +101,7 @@ export function MeteorShower() {
           continue;
         }
 
-        if (m.y - m.len > height || m.x - m.len > width) {
+        if (m.y - m.len > height || m.x + m.len < 0) {
           Object.assign(m, spawnMeteor());
           continue;
         }

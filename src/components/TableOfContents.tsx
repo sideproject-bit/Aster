@@ -31,7 +31,7 @@ export function TableOfContents({ headings, containerRef }: Props) {
   }
 
   return (
-    <div className="mb-6 rounded-lg border border-neutral-200 dark:border-neutral-800">
+    <div className="mb-6 rounded-lg border border-card-border">
       <button
         type="button"
         onClick={() => setExpanded((v) => !v)}
@@ -49,7 +49,7 @@ export function TableOfContents({ headings, containerRef }: Props) {
               <button
                 type="button"
                 onClick={() => scrollTo(i)}
-                className="text-left text-blue-600 hover:underline dark:text-blue-400"
+                className="text-left text-link hover:underline"
               >
                 {numberFor(h.level)}. {h.text}
               </button>

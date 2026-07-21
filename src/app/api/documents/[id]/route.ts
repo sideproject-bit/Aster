@@ -17,7 +17,7 @@ export async function GET(_req: NextRequest, { params }: Params) {
 
   const access = await getViewableWiki(document.wikiId);
   if (!access) return NextResponse.json({ error: "not found" }, { status: 404 });
-  if (!access.isOwner && !(document.status === "PUBLISHED" && document.isPublic)) {
+  if (!access.isOwner && document.status !== "PUBLISHED") {
     return NextResponse.json({ error: "not found" }, { status: 404 });
   }
 
@@ -40,7 +40,6 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 
   if (typeof body.content !== "undefined") data.content = body.content;
   if (typeof body.status === "string") data.status = body.status;
-  if (typeof body.isPublic === "boolean") data.isPublic = body.isPublic;
   if (typeof body.order === "number") data.order = body.order;
   if (Array.isArray(body.tagIds)) {
     data.tags = { set: body.tagIds.map((tagId: string) => ({ id: tagId })) };

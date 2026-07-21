@@ -20,7 +20,22 @@ model User {
   wikis              Wiki[]
   collaboratingOn    WikiCollaborator[]
   passwordResetTokens PasswordResetToken[]
+  bookmarks          Bookmark[]
   createdAt          DateTime            @default(now())
+}
+
+// A saved reference to a document a user found via a public wiki's shared link —
+// lets them find it again without re-entering the link. Owner is not required to
+// exist among the wiki's owner/collaborators (that's the whole point).
+model Bookmark {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, documentId])
 }
 
 model PasswordResetToken {
@@ -38,6 +53,7 @@ model Wiki {
   ownerId       String
   owner         User               @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   isPublic      Boolean            @default(false)
+  coverImageUrl String?
   documents     Document[]
   tags          Tag[]
   collaborators WikiCollaborator[]
@@ -68,10 +84,10 @@ model Document {
   slug      String
   content   Json // Tiptap JSON document
   status    Status     @default(DRAFT)
-  isPublic  Boolean    @default(false)
   order     Int        @default(0)
   isFolder  Boolean    @default(false)
   tags      Tag[]
+  bookmarks Bookmark[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 

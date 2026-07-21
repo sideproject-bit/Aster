@@ -31,6 +31,9 @@ export type DocumentSummary = {
 type DocumentsContextValue = {
   wikiId: string;
   isOwner: boolean;
+  mode: "edit" | "view";
+  homePath: string;
+  docPath: (id: string) => string;
   documents: DocumentSummary[];
   loading: boolean;
   refresh: () => Promise<void>;
@@ -45,10 +48,12 @@ const DocumentsContext = createContext<DocumentsContextValue | null>(null);
 export function DocumentsProvider({
   wikiId,
   isOwner,
+  mode = "edit",
   children,
 }: {
   wikiId: string;
   isOwner: boolean;
+  mode?: "edit" | "view";
   children: ReactNode;
 }) {
   const [documents, setDocuments] = useState<DocumentSummary[]>([]);
@@ -113,11 +118,18 @@ export function DocumentsProvider({
     [documents]
   );
 
+  const homePath = mode === "view" ? `/view/${wikiId}` : `/w/${wikiId}`;
+  const docPath = (id: string) =>
+    mode === "view" ? `/view/${wikiId}/${id}` : `/w/${wikiId}/wiki/${id}`;
+
   return (
     <DocumentsContext.Provider
       value={{
         wikiId,
         isOwner,
+        mode,
+        homePath,
+        docPath,
         documents,
         loading,
         refresh,

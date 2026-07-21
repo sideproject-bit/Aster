@@ -5,6 +5,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
+import { AuthBackdrop } from "@/components/effects/AuthBackdrop";
 
 const ERROR_KEYS: Record<string, string> = {
   missing_fields: "auth.error.missingFields",
@@ -51,48 +52,52 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="mx-auto flex max-w-sm flex-col gap-4 px-8 py-16">
-      <h1 className="text-2xl font-semibold">{t("auth.signup.title")}</h1>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-        <input
-          type="text"
-          placeholder={t("auth.nameOptional")}
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="rounded border border-neutral-300 bg-transparent px-3 py-2 dark:border-neutral-700"
-        />
-        <input
-          type="email"
-          required
-          placeholder={t("auth.email")}
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="rounded border border-neutral-300 bg-transparent px-3 py-2 dark:border-neutral-700"
-        />
-        <input
-          type="password"
-          required
-          minLength={8}
-          placeholder={t("auth.passwordHint")}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="rounded border border-neutral-300 bg-transparent px-3 py-2 dark:border-neutral-700"
-        />
-        {error && <p className="text-sm text-red-500">{error}</p>}
-        <button
-          type="submit"
-          disabled={loading}
-          className="rounded bg-brand px-3 py-2 font-medium text-brand-foreground hover:opacity-90 disabled:opacity-50"
-        >
-          {loading ? t("auth.signup.loading") : t("auth.signup.button")}
-        </button>
-      </form>
-      <p className="text-sm text-neutral-500">
-        {t("auth.signup.haveAccount")}{" "}
-        <Link href="/login" className="text-blue-600 hover:underline dark:text-blue-400">
-          {t("auth.login.title")}
-        </Link>
-      </p>
-    </div>
+    <AuthBackdrop>
+      <div className="mx-auto flex max-w-sm flex-col gap-4 px-8 py-16">
+        <h1 data-meteor-target className="text-2xl font-semibold">
+          {t("auth.signup.title")}
+        </h1>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+          <input
+            type="text"
+            placeholder={t("auth.nameOptional")}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="rounded border border-neutral-300 bg-transparent px-3 py-2 dark:border-neutral-700"
+          />
+          <input
+            type="email"
+            required
+            placeholder={t("auth.email")}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="rounded border border-neutral-300 bg-transparent px-3 py-2 dark:border-neutral-700"
+          />
+          <input
+            type="password"
+            required
+            minLength={8}
+            placeholder={t("auth.passwordHint")}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="rounded border border-neutral-300 bg-transparent px-3 py-2 dark:border-neutral-700"
+          />
+          {error && <p className="text-sm text-red-500">{error}</p>}
+          <button
+            type="submit"
+            disabled={loading}
+            className="rounded bg-brand px-3 py-2 font-medium text-brand-foreground hover:opacity-90 disabled:opacity-50"
+          >
+            {loading ? t("auth.signup.loading") : t("auth.signup.button")}
+          </button>
+        </form>
+        <p className="text-sm text-neutral-500">
+          {t("auth.signup.haveAccount")}{" "}
+          <Link href="/login" className="text-link hover:underline">
+            {t("auth.login.title")}
+          </Link>
+        </p>
+      </div>
+    </AuthBackdrop>
   );
 }

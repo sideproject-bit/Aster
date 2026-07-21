@@ -71,7 +71,7 @@ function TreeNode({
   onRequestContextMenu: (doc: DocumentSummary, x: number, y: number) => void;
   drag: DragHandlers;
 }) {
-  const { childrenOf, refresh } = useDocuments();
+  const { childrenOf, refresh, docPath } = useDocuments();
   const { t } = useLanguage();
   const router = useRouter();
   const params = useParams<{ docId?: string }>();
@@ -127,7 +127,7 @@ function TreeNode({
         }`}
         style={{ paddingLeft: depth * 14 + 8 }}
         onClick={() =>
-          doc.isFolder ? setExpanded((v) => !v) : router.push(`/w/${wikiId}/wiki/${doc.id}`)
+          doc.isFolder ? setExpanded((v) => !v) : router.push(docPath(doc.id))
         }
       >
         {dropHere === "before" && (
@@ -330,7 +330,7 @@ export function DocumentTree() {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center justify-between px-3 py-2 border-b border-neutral-200 dark:border-neutral-800">
+      <div className="flex items-center justify-between px-3 py-2 border-b border-card-border">
         <span className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
           {t("sidebar.documents")}
         </span>

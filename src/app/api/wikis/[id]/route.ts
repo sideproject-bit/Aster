@@ -13,6 +13,9 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   const data: Record<string, unknown> = {};
   if (typeof body.title === "string" && body.title.trim()) data.title = body.title.trim();
   if (typeof body.isPublic === "boolean") data.isPublic = body.isPublic;
+  if (typeof body.coverImageUrl === "string" || body.coverImageUrl === null) {
+    data.coverImageUrl = body.coverImageUrl;
+  }
 
   const wiki = await prisma.wiki.update({ where: { id }, data });
   return NextResponse.json(wiki);

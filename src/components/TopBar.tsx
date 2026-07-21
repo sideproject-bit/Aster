@@ -44,6 +44,9 @@ export function TopBar() {
         )}
       </div>
       <div className="flex items-center gap-3 text-sm">
+        <Link href="/view" className="text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200">
+          {t("topbar.view")}
+        </Link>
         <LanguageToggle />
         <ThemeToggle />
         {status === "authenticated" && session?.user ? (

@@ -1,9 +1,9 @@
 import { getViewableWiki } from "@/lib/wikiAccess";
 import { DocumentsProvider } from "@/context/DocumentsContext";
-import { DocumentTree } from "@/components/sidebar/DocumentTree";
+import { ViewSidebar } from "@/components/view/ViewSidebar";
 import { NoAccessMessage } from "@/components/NoAccessMessage";
 
-export default async function WikiLayout({
+export default async function ViewWikiLayout({
   children,
   params,
 }: {
@@ -18,9 +18,9 @@ export default async function WikiLayout({
   }
 
   return (
-    <DocumentsProvider wikiId={wikiId} isOwner={access.isOwner}>
+    <DocumentsProvider wikiId={wikiId} isOwner={false} mode="view">
       <aside className="w-64 shrink-0 border-r border-card-border">
-        <DocumentTree />
+        <ViewSidebar />
       </aside>
       <main className="flex-1 overflow-y-auto">{children}</main>
     </DocumentsProvider>

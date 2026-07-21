@@ -53,8 +53,8 @@ export async function requireEditAccess(wikiId: string) {
  * `wiki.isPublic`. `isOwner` in the returned object means "has full content edit
  * rights" (owner OR collaborator) — despite the name, it also covers collaborators,
  * since within a wiki's document tree there's no UI distinction between the two.
- * Callers should further filter individual documents to
- * `status === "PUBLISHED" && isPublic` when `isOwner` is false.
+ * Callers should further filter individual documents to `status === "PUBLISHED"`
+ * when `isOwner` is false — a public wiki still hides its draft documents.
  */
 export async function getViewableWiki(wikiId: string) {
   const session = await auth();

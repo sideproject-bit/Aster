@@ -5,7 +5,7 @@ import { useDocuments } from "@/context/DocumentsContext";
 import { useLanguage } from "@/context/LanguageContext";
 
 export function Breadcrumb({ docId }: { docId: string }) {
-  const { wikiId, ancestors } = useDocuments();
+  const { homePath, docPath, ancestors } = useDocuments();
   const { t } = useLanguage();
   const chain = ancestors(docId);
 
@@ -14,7 +14,7 @@ export function Breadcrumb({ docId }: { docId: string }) {
   return (
     <nav className="flex items-center gap-1 text-sm text-neutral-500 mb-3 flex-wrap">
       <Link
-        href={`/w/${wikiId}`}
+        href={homePath}
         className="hover:underline hover:text-neutral-800 dark:hover:text-neutral-200"
       >
         {t("breadcrumb.home")}
@@ -28,7 +28,7 @@ export function Breadcrumb({ docId }: { docId: string }) {
             </span>
           ) : (
             <Link
-              href={`/w/${wikiId}/wiki/${doc.id}`}
+              href={docPath(doc.id)}
               className="hover:underline hover:text-neutral-800 dark:hover:text-neutral-200"
             >
               {doc.title}

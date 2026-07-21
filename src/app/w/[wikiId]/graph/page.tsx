@@ -51,7 +51,7 @@ export default function GraphPage() {
   return (
     <div className="flex h-full flex-col p-6">
       <h1 className="mb-4 text-xl font-semibold">{t("graph.title")}</h1>
-      <div ref={containerRef} className="min-h-0 flex-1 rounded-lg border border-neutral-200 dark:border-neutral-800">
+      <div ref={containerRef} className="min-h-0 flex-1 rounded-lg border border-card-border">
         {data && data.nodes.length === 0 && (
           <div className="flex h-full items-center justify-center text-sm text-neutral-400">
             {t("graph.empty")}

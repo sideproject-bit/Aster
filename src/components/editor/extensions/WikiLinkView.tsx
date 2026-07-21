@@ -8,7 +8,7 @@ import { useLanguage } from "@/context/LanguageContext";
 
 export function WikiLinkView({ node, editor, updateAttributes }: NodeViewProps) {
   const router = useRouter();
-  const { wikiId, isOwner, refresh } = useDocuments();
+  const { wikiId, isOwner, docPath, refresh } = useDocuments();
   const { t } = useLanguage();
   const [creating, setCreating] = useState(false);
   const [editable, setEditable] = useState(editor.isEditable);
@@ -31,7 +31,7 @@ export function WikiLinkView({ node, editor, updateAttributes }: NodeViewProps) 
 
   async function handleClick() {
     if (exists) {
-      router.push(`/w/${wikiId}/wiki/${docId}`);
+      router.push(docPath(docId));
       return;
     }
     if (!canEdit || creating) return;
@@ -45,7 +45,7 @@ export function WikiLinkView({ node, editor, updateAttributes }: NodeViewProps) 
       const created = await res.json();
       updateAttributes({ docId: created.id });
       await refresh();
-      router.push(`/w/${wikiId}/wiki/${created.id}`);
+      router.push(docPath(created.id));
     } finally {
       setCreating(false);
     }
@@ -59,7 +59,7 @@ export function WikiLinkView({ node, editor, updateAttributes }: NodeViewProps) 
         disabled={!exists && !canEdit}
         className={
           exists
-            ? "text-blue-600 dark:text-blue-400 hover:underline decoration-1"
+            ? "text-link hover:underline decoration-1"
             : "text-red-500 dark:text-red-400 border-b border-dashed border-red-400 hover:opacity-80 disabled:opacity-60"
         }
         title={

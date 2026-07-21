@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     where: {
       wikiId,
       isFolder: false,
-      ...(access.isOwner ? {} : { status: "PUBLISHED", isPublic: true }),
+      ...(access.isOwner ? {} : { status: "PUBLISHED" }),
     },
     select: {
       id: true,

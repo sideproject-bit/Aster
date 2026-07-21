@@ -19,16 +19,25 @@ type FullDocument = {
   title: string;
   content: JSONContent;
   status: Status;
-  isPublic: boolean;
   tags: TagSummary[];
   isOwner: boolean;
+  createdAt: string;
+  updatedAt: string;
 };
+
+function formatCardDate(iso: string, lang: string): string {
+  return new Date(iso).toLocaleDateString(lang === "ko" ? "ko-KR" : "en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
 
 export default function DocumentPage() {
   const { wikiId, docId } = useParams<{ wikiId: string; docId: string }>();
   const router = useRouter();
-  const { refresh, childrenOf } = useDocuments();
-  const { t } = useLanguage();
+  const { homePath, docPath, refresh, childrenOf } = useDocuments();
+  const { t, lang } = useLanguage();
 
   const [doc, setDoc] = useState<FullDocument | null>(null);
   const [titleDraft, setTitleDraft] = useState("");
@@ -115,21 +124,9 @@ export default function DocumentPage() {
 
   async function handleStatusChange(status: Status) {
     if (!doc) return;
-    const updated = await patchDoc({
-      status,
-      // Draft documents are always private; flipping back to draft resets sharing.
-      isPublic: status === "DRAFT" ? false : doc.isPublic,
-    });
-    setDoc((prev) =>
-      prev ? { ...prev, status: updated.status, isPublic: updated.isPublic } : prev
-    );
+    const updated = await patchDoc({ status });
+    setDoc((prev) => (prev ? { ...prev, status: updated.status } : prev));
     await refresh();
-  }
-
-  async function handlePublicToggle(isPublic: boolean) {
-    if (!doc || doc.status !== "PUBLISHED") return;
-    const updated = await patchDoc({ isPublic });
-    setDoc((prev) => (prev ? { ...prev, isPublic: updated.isPublic } : prev));
   }
 
   async function handleTagsChange(tags: TagSummary[]) {
@@ -142,7 +139,7 @@ export default function DocumentPage() {
     if (!doc) return;
     await fetch(`/api/documents/${docId}`, { method: "DELETE" });
     await refresh();
-    router.push(`/w/${wikiId}`);
+    router.push(homePath);
   }
 
   if (notFound) {
@@ -205,32 +202,34 @@ export default function DocumentPage() {
       </div>
 
       {editingMode && (
-        <div className="mb-6 flex flex-wrap items-center gap-3 text-sm">
+        <div className="mb-4 flex flex-wrap items-center gap-3 text-sm">
           <StatusToggle status={doc.status} onChange={handleStatusChange} />
-          <label
-            className={`flex items-center gap-1 ${
-              doc.status !== "PUBLISHED" ? "opacity-40" : ""
-            }`}
-            title={
-              doc.status !== "PUBLISHED"
-                ? t("doc.linkPublicDisabledHint")
-                : t("doc.linkPublicEnabledHint")
-            }
-          >
-            <input
-              type="checkbox"
-              checked={doc.isPublic}
-              disabled={doc.status !== "PUBLISHED"}
-              onChange={(e) => handlePublicToggle(e.target.checked)}
-              className="accent-brand"
-            />
-            {t("doc.linkPublic")}
-          </label>
           <span className="text-neutral-300 dark:text-neutral-600">
             {saving ? t("doc.saving") : t("doc.saved")}
           </span>
         </div>
       )}
+
+      <div className="mb-6 flex flex-wrap items-center gap-x-4 gap-y-1 rounded border border-neutral-200 px-3 py-1.5 text-xs text-neutral-500 dark:border-neutral-800">
+        <span>
+          <span className="uppercase tracking-wide text-neutral-400 dark:text-neutral-600">
+            {t("doc.card.filed")}
+          </span>{" "}
+          {formatCardDate(doc.createdAt, lang)}
+        </span>
+        <span>
+          <span className="uppercase tracking-wide text-neutral-400 dark:text-neutral-600">
+            {t("doc.card.revised")}
+          </span>{" "}
+          {formatCardDate(doc.updatedAt, lang)}
+        </span>
+        <span>
+          <span className="uppercase tracking-wide text-neutral-400 dark:text-neutral-600">
+            {t("doc.card.recordNo")}
+          </span>{" "}
+          <span className="font-mono">{doc.id.slice(-8).toUpperCase()}</span>
+        </span>
+      </div>
 
       {previewing && (
         <div className="mb-6 rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800 dark:bg-amber-900/30 dark:text-amber-300">
@@ -295,10 +294,7 @@ export default function DocumentPage() {
                 </li>
               ) : (
                 <li key={k.id}>
-                  <Link
-                    href={`/w/${wikiId}/wiki/${k.id}`}
-                    className="text-blue-600 hover:underline dark:text-blue-400"
-                  >
+                  <Link href={docPath(k.id)} className="text-link hover:underline">
                     {k.title}
                   </Link>
                 </li>
@@ -342,9 +338,7 @@ function StatusToggle({
       <button
         onClick={() => onChange("PUBLISHED")}
         className={`px-3 py-1 ${
-          status === "PUBLISHED"
-            ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300"
-            : "text-neutral-500"
+          status === "PUBLISHED" ? "bg-brand text-brand-foreground" : "text-neutral-500"
         }`}
       >
         {t("doc.statusPublished")}

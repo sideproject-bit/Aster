@@ -4,6 +4,7 @@ import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
+import { AuthBackdrop } from "@/components/effects/AuthBackdrop";
 
 const ERROR_KEYS: Record<string, string> = {
   invalid_token: "resetPassword.invalidToken",
@@ -37,37 +38,41 @@ function ResetPasswordForm() {
   }
 
   return (
-    <div className="mx-auto flex max-w-sm flex-col gap-4 px-8 py-16">
-      <h1 className="text-2xl font-semibold">{t("resetPassword.title")}</h1>
-      {success ? (
-        <p className="text-sm text-neutral-500">{t("resetPassword.success")}</p>
-      ) : (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-          <input
-            type="password"
-            required
-            minLength={8}
-            placeholder={t("auth.passwordHint")}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="rounded border border-neutral-300 bg-transparent px-3 py-2 dark:border-neutral-700"
-          />
-          {error && <p className="text-sm text-red-500">{error}</p>}
-          <button
-            type="submit"
-            disabled={loading || !token}
-            className="rounded bg-brand px-3 py-2 font-medium text-brand-foreground hover:opacity-90 disabled:opacity-50"
-          >
-            {loading ? t("resetPassword.resetting") : t("resetPassword.submit")}
-          </button>
-        </form>
-      )}
-      <p className="text-sm text-neutral-500">
-        <Link href="/login" className="text-blue-600 hover:underline dark:text-blue-400">
-          {t("forgotPassword.backToLogin")}
-        </Link>
-      </p>
-    </div>
+    <AuthBackdrop>
+      <div className="mx-auto flex max-w-sm flex-col gap-4 px-8 py-16">
+        <h1 data-meteor-target className="text-2xl font-semibold">
+          {t("resetPassword.title")}
+        </h1>
+        {success ? (
+          <p className="text-sm text-neutral-500">{t("resetPassword.success")}</p>
+        ) : (
+          <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+            <input
+              type="password"
+              required
+              minLength={8}
+              placeholder={t("auth.passwordHint")}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="rounded border border-neutral-300 bg-transparent px-3 py-2 dark:border-neutral-700"
+            />
+            {error && <p className="text-sm text-red-500">{error}</p>}
+            <button
+              type="submit"
+              disabled={loading || !token}
+              className="rounded bg-brand px-3 py-2 font-medium text-brand-foreground hover:opacity-90 disabled:opacity-50"
+            >
+              {loading ? t("resetPassword.resetting") : t("resetPassword.submit")}
+            </button>
+          </form>
+        )}
+        <p className="text-sm text-neutral-500">
+          <Link href="/login" className="text-link hover:underline">
+            {t("forgotPassword.backToLogin")}
+          </Link>
+        </p>
+      </div>
+    </AuthBackdrop>
   );
 }
 

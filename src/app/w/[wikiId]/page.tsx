@@ -24,7 +24,7 @@ export default function WikiHome() {
               <li key={d.id}>
                 <Link
                   href={`/w/${wikiId}/wiki/${d.id}`}
-                  className="text-blue-600 hover:underline dark:text-blue-400"
+                  className="text-link hover:underline"
                 >
                   {d.title}
                 </Link>

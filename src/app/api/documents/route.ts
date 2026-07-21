@@ -5,8 +5,8 @@ import { EMPTY_DOC } from "@/lib/emptyDoc";
 import { getViewableWiki, requireEditAccess } from "@/lib/wikiAccess";
 
 // List documents in a wiki (lightweight fields, used for tree + breadcrumb).
-// Non-owners only see published + publicly shared documents (folders are always
-// visible for navigation structure).
+// Non-owners (only reachable when the wiki itself is public) only see published
+// documents (folders are always visible for navigation structure).
 export async function GET(req: NextRequest) {
   const wikiId = req.nextUrl.searchParams.get("wikiId");
   if (!wikiId) {
@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
   const documents = await prisma.document.findMany({
     where: {
       wikiId,
-      ...(access.isOwner ? {} : { OR: [{ isFolder: true }, { status: "PUBLISHED", isPublic: true }] }),
+      ...(access.isOwner ? {} : { OR: [{ isFolder: true }, { status: "PUBLISHED" }] }),
     },
     select: {
       id: true,

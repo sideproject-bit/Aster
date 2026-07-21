@@ -14,6 +14,7 @@ export async function GET() {
     id: true,
     title: true,
     isPublic: true,
+    coverImageUrl: true,
     createdAt: true,
     _count: { select: { documents: true } },
   } as const;

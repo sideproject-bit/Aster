@@ -40,7 +40,7 @@ function ResetPasswordForm() {
   return (
     <AuthBackdrop>
       <div className="mx-auto flex max-w-sm flex-col gap-4 px-8 py-16">
-        <h1 data-meteor-target className="text-2xl font-semibold">
+        <h1 className="text-2xl font-semibold">
           {t("resetPassword.title")}
         </h1>
         {success ? (

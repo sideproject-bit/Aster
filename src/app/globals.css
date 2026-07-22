@@ -90,9 +90,17 @@ body {
   border: 1px solid #d4d4d4;
   box-sizing: border-box;
   min-width: 3em;
-  padding: 6px 10px;
+  padding: 3px 6px;
   position: relative;
   vertical-align: top;
+}
+
+/* `.prose` (Tailwind Typography) gives every paragraph its own vertical
+   margin, which stacks badly inside a table cell (a single line of text
+   ends up looking much taller than the cell padding alone would suggest). */
+.tiptap table td p,
+.tiptap table th p {
+  margin: 0;
 }
 
 .dark .tiptap table td,
@@ -134,4 +142,11 @@ body {
 
 .tiptap.resize-cursor {
   cursor: col-resize;
+}
+
+/* Set by RowResizing.ts while the pointer is near a row's bottom edge —
+   prosemirror-tables doesn't ship a row-height equivalent of column
+   resizing, so this is a small custom plugin rather than a library class. */
+.tiptap.row-resize-cursor {
+  cursor: row-resize;
 }

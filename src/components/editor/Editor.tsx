@@ -5,7 +5,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import Image from "@tiptap/extension-image";
 import { Table } from "@tiptap/extension-table";
-import TableRow from "@tiptap/extension-table-row";
+import TextAlign from "@tiptap/extension-text-align";
 import { TextStyle } from "@tiptap/extension-text-style";
 import { Color } from "@tiptap/extension-color";
 import Highlight from "@tiptap/extension-highlight";
@@ -15,6 +15,8 @@ import { Footnote } from "./extensions/Footnote";
 import { EditorShortcuts } from "./extensions/EditorShortcuts";
 import { CollapsibleHeading } from "./extensions/CollapsibleHeading";
 import { CustomTableCell, CustomTableHeader } from "./extensions/CustomTableCell";
+import { CustomTableRow } from "./extensions/CustomTableRow";
+import { RowResizing } from "./extensions/RowResizing";
 import { ColorSwatches } from "./ColorSwatches";
 import { ShortcutsHelp } from "./ShortcutsHelp";
 import { ContextMenu, type ContextMenuItem } from "@/components/ui/ContextMenu";
@@ -35,6 +37,11 @@ import {
   DeleteRowIcon,
   DeleteColumnIcon,
   DeleteTableIcon,
+  MergeCellsIcon,
+  SplitCellIcon,
+  AlignLeftIcon,
+  AlignCenterIcon,
+  AlignRightIcon,
   LinkIcon,
 } from "./icons";
 import { useLanguage } from "@/context/LanguageContext";
@@ -95,9 +102,11 @@ export function Editor({
       Color,
       Highlight.configure({ multicolor: true }),
       Table.configure({ resizable: true }),
-      TableRow,
+      CustomTableRow,
+      RowResizing,
       CustomTableHeader,
       CustomTableCell,
+      TextAlign.configure({ types: ["tableCell", "tableHeader"] }),
       EditorShortcuts,
     ],
     content,
@@ -389,6 +398,41 @@ export function Editor({
             >
               <DeleteColumnIcon className="h-4 w-4" />
             </ToolbarButton>
+            <ToolbarButton
+              title={t("editor.mergeCells")}
+              disabled={!editor.can().mergeCells()}
+              onClick={() => editor.chain().focus().mergeCells().run()}
+            >
+              <MergeCellsIcon className="h-4 w-4" />
+            </ToolbarButton>
+            <ToolbarButton
+              title={t("editor.splitCell")}
+              disabled={!editor.can().splitCell()}
+              onClick={() => editor.chain().focus().splitCell().run()}
+            >
+              <SplitCellIcon className="h-4 w-4" />
+            </ToolbarButton>
+            <ToolbarButton
+              active={editor.isActive({ textAlign: "left" })}
+              title={t("editor.alignLeft")}
+              onClick={() => editor.chain().focus().setTextAlign("left").run()}
+            >
+              <AlignLeftIcon className="h-4 w-4" />
+            </ToolbarButton>
+            <ToolbarButton
+              active={editor.isActive({ textAlign: "center" })}
+              title={t("editor.alignCenter")}
+              onClick={() => editor.chain().focus().setTextAlign("center").run()}
+            >
+              <AlignCenterIcon className="h-4 w-4" />
+            </ToolbarButton>
+            <ToolbarButton
+              active={editor.isActive({ textAlign: "right" })}
+              title={t("editor.alignRight")}
+              onClick={() => editor.chain().focus().setTextAlign("right").run()}
+            >
+              <AlignRightIcon className="h-4 w-4" />
+            </ToolbarButton>
             <ColorSwatches
               label={<SwatchIcon className="h-4 w-4" />}
               title={t("editor.cellColor")}
@@ -441,19 +485,22 @@ function ToolbarButton({
   children,
   onClick,
   active,
+  disabled,
   title,
 }: {
   children: React.ReactNode;
   onClick: () => void;
   active?: boolean;
+  disabled?: boolean;
   title?: string;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
+      disabled={disabled}
       title={title}
-      className={`flex items-center justify-center rounded px-2 py-1.5 text-sm ${
+      className={`flex items-center justify-center rounded px-2 py-1.5 text-sm disabled:cursor-not-allowed disabled:opacity-40 ${
         active
           ? "bg-brand/25 dark:bg-brand/30"
           : "hover:bg-neutral-100 dark:hover:bg-neutral-800"

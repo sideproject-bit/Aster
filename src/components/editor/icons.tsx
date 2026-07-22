@@ -200,6 +200,77 @@ export function DeleteTableIcon({ className }: IconProps) {
   );
 }
 
+export function MergeCellsIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" className={className} aria-hidden>
+      <rect x="2" y="2.5" width="12" height="11" rx="1" stroke="currentColor" strokeWidth="1.3" />
+      <path d="M2 8h12" stroke="currentColor" strokeWidth="1.2" />
+      <path
+        d="M5.5 5.5 8 8l-2.5 2.5M10.5 5.5 8 8l2.5 2.5"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function SplitCellIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" className={className} aria-hidden>
+      <rect x="2" y="2.5" width="12" height="11" rx="1" stroke="currentColor" strokeWidth="1.3" />
+      <path d="M8 2.5v11" stroke="currentColor" strokeWidth="1.2" />
+      <path
+        d="M6.2 5.8 4 8l2.2 2.2M9.8 5.8 12 8l-2.2 2.2"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function AlignLeftIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" className={className} aria-hidden>
+      <path
+        d="M2.5 3.5h11M2.5 6.8h7M2.5 10.1h11M2.5 13.4h7"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+export function AlignCenterIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" className={className} aria-hidden>
+      <path
+        d="M2.5 3.5h11M4.5 6.8h7M2.5 10.1h11M4.5 13.4h7"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+export function AlignRightIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" className={className} aria-hidden>
+      <path
+        d="M2.5 3.5h11M6.5 6.8h7M2.5 10.1h11M6.5 13.4h7"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 export function LinkIcon({ className }: IconProps) {
   return (
     <svg viewBox="0 0 16 16" fill="none" className={className} aria-hidden>

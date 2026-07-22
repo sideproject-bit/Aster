@@ -55,12 +55,26 @@ type Props = {
   containerRef?: RefObject<HTMLDivElement | null>;
 };
 
+// Vercel's serverless functions reject request bodies over ~4.5MB before this
+// code even runs, which previously surfaced as a silent no-op (the upload
+// promise rejected with no visible error) — checking client-side first gives
+// the user an actual message instead of "nothing happened".
+const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
+
 async function uploadImage(wikiId: string, file: File): Promise<string> {
+  if (file.size > MAX_IMAGE_BYTES) {
+    throw new Error("tooLarge");
+  }
   const formData = new FormData();
   formData.append("wikiId", wikiId);
   formData.append("file", file);
-  const res = await fetch("/api/upload", { method: "POST", body: formData });
-  if (!res.ok) throw new Error("upload failed");
+  let res: Response;
+  try {
+    res = await fetch("/api/upload", { method: "POST", body: formData });
+  } catch {
+    throw new Error("network");
+  }
+  if (!res.ok) throw new Error("server");
   const data = await res.json();
   return data.url as string;
 }
@@ -76,6 +90,15 @@ export function Editor({
   const { t } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [editorMenu, setEditorMenu] = useState<{ x: number; y: number } | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  function describeUploadError(err: unknown): string {
+    const key = err instanceof Error ? err.message : "";
+    if (key === "tooLarge") return t("editor.imageTooLarge");
+    if (key === "network") return t("editor.imageUploadNetworkError");
+    return t("editor.imageUploadFailed");
+  }
+
   const onSaveRef = useRef(onSave);
   useEffect(() => {
     onSaveRef.current = onSave;
@@ -120,15 +143,18 @@ export function Editor({
         const file = event.dataTransfer?.files?.[0];
         if (!file || !file.type.startsWith("image/")) return false;
         event.preventDefault();
-        uploadImage(wikiId, file).then((url) => {
-          const pos = view.posAtCoords({ left: event.clientX, top: event.clientY })?.pos;
-          view.dispatch(
-            view.state.tr.insert(
-              pos ?? view.state.selection.from,
-              view.state.schema.nodes.image.create({ src: url })
-            )
-          );
-        });
+        setUploadError(null);
+        uploadImage(wikiId, file)
+          .then((url) => {
+            const pos = view.posAtCoords({ left: event.clientX, top: event.clientY })?.pos;
+            view.dispatch(
+              view.state.tr.insert(
+                pos ?? view.state.selection.from,
+                view.state.schema.nodes.image.create({ src: url })
+              )
+            );
+          })
+          .catch((err) => setUploadError(describeUploadError(err)));
         return true;
       },
       handlePaste(view, event) {
@@ -138,14 +164,17 @@ export function Editor({
         );
         if (!file) return false;
         event.preventDefault();
-        uploadImage(wikiId, file).then((url) => {
-          view.dispatch(
-            view.state.tr.insert(
-              view.state.selection.from,
-              view.state.schema.nodes.image.create({ src: url })
-            )
-          );
-        });
+        setUploadError(null);
+        uploadImage(wikiId, file)
+          .then((url) => {
+            view.dispatch(
+              view.state.tr.insert(
+                view.state.selection.from,
+                view.state.schema.nodes.image.create({ src: url })
+              )
+            );
+          })
+          .catch((err) => setUploadError(describeUploadError(err)));
         return true;
       },
     },
@@ -210,6 +239,7 @@ export function Editor({
   if (!editor) return null;
 
   async function handleImageButton() {
+    setUploadError(null);
     fileInputRef.current?.click();
   }
 
@@ -217,8 +247,13 @@ export function Editor({
     const file = e.target.files?.[0];
     e.target.value = "";
     if (!file || !editor) return;
-    const url = await uploadImage(wikiId, file);
-    editor.chain().focus().setImage({ src: url }).run();
+    setUploadError(null);
+    try {
+      const url = await uploadImage(wikiId, file);
+      editor.chain().focus().setImage({ src: url }).run();
+    } catch (err) {
+      setUploadError(describeUploadError(err));
+    }
   }
 
   function insertFootnote() {
@@ -465,6 +500,9 @@ export function Editor({
           <ShortcutsHelp />
         </span>
       </div>
+      )}
+      {uploadError && (
+        <p className="mb-2 text-sm text-red-500">{uploadError}</p>
       )}
       <div onContextMenu={handleEditorContextMenu}>
         <EditorContent editor={editor} />

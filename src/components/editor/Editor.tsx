@@ -74,7 +74,19 @@ async function uploadImage(wikiId: string, file: File): Promise<string> {
   } catch {
     throw new Error("network");
   }
-  if (!res.ok) throw new Error("server");
+  if (!res.ok) {
+    // Carry the status/body through to the toolbar's error banner — a bare
+    // "upload failed" gave no way to tell a permissions problem from a
+    // storage misconfiguration apart from opening devtools.
+    let detail = "";
+    try {
+      const body = await res.json();
+      if (typeof body?.error === "string") detail = body.error;
+    } catch {
+      // response wasn't JSON — leave detail blank, status code is still useful
+    }
+    throw new Error(`server:${res.status}:${detail}`);
+  }
   const data = await res.json();
   return data.url as string;
 }
@@ -93,9 +105,13 @@ export function Editor({
   const [uploadError, setUploadError] = useState<string | null>(null);
 
   function describeUploadError(err: unknown): string {
-    const key = err instanceof Error ? err.message : "";
-    if (key === "tooLarge") return t("editor.imageTooLarge");
-    if (key === "network") return t("editor.imageUploadNetworkError");
+    const message = err instanceof Error ? err.message : "";
+    if (message === "tooLarge") return t("editor.imageTooLarge");
+    if (message === "network") return t("editor.imageUploadNetworkError");
+    if (message.startsWith("server:")) {
+      const [, status, detail] = message.split(":");
+      return `${t("editor.imageUploadFailed")} (${status}${detail ? `: ${detail}` : ""})`;
+    }
     return t("editor.imageUploadFailed");
   }
 

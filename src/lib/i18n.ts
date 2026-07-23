@@ -6,6 +6,7 @@ export const DEFAULT_LANG: Lang = "en";
 // two language maps trivially diffable and avoids TS having to reconcile matching shapes.
 export const dictionaries: Record<Lang, Record<string, string>> = {
   en: {
+    "site.copyright": "© {year} Aster. All rights reserved.",
     "landing.tagline": "Beyond simple note-taking.",
     "landing.login": "Log in",
     "landing.signup": "Sign up",
@@ -169,6 +170,8 @@ export const dictionaries: Record<Lang, Record<string, string>> = {
     "doc.noFootnoteContent": "(no content)",
     "doc.subdocsTitle": "Sub-documents",
     "doc.folderLabel": "folder",
+    "doc.copyrightNotice":
+      "Unauthorized reproduction or distribution of this document without the owner's permission is prohibited.",
     "doc.deleteConfirm": 'Delete "{title}"? Sub-documents will move up to the parent.',
     "doc.statusDraft": "Draft",
     "doc.statusPublished": "Published",
@@ -335,6 +338,7 @@ export const dictionaries: Record<Lang, Record<string, string>> = {
     "demoWiki.tpl.study.term2": "Term — definition",
   },
   ko: {
+    "site.copyright": "© {year} Aster. 모든 권리 보유.",
     "landing.tagline": "단순한 메모, 그 이상의 차원으로.",
     "landing.login": "로그인",
     "landing.signup": "회원가입",
@@ -496,6 +500,7 @@ export const dictionaries: Record<Lang, Record<string, string>> = {
     "doc.noFootnoteContent": "(내용 없음)",
     "doc.subdocsTitle": "하위 문서",
     "doc.folderLabel": "폴더",
+    "doc.copyrightNotice": "이 문서의 소유자 동의 없는 무단 복제 및 배포를 금지합니다.",
     "doc.deleteConfirm": '"{title}" 문서를 삭제할까요? 하위 문서는 상위 문서로 이동합니다.',
     "doc.statusDraft": "임시저장",
     "doc.statusPublished": "작성완료",

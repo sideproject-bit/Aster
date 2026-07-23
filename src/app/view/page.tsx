@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
+import { SiteFooter } from "@/components/SiteFooter";
 
 type Bookmark = {
   id: string;
@@ -128,6 +129,8 @@ export default function ViewLandingPage() {
           )}
         </div>
       )}
+
+      <SiteFooter />
     </div>
   );
 }

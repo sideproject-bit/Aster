@@ -11,6 +11,7 @@ import { collectHeadings } from "@/lib/toc";
 import { ConfirmModal } from "@/components/ui/ConfirmModal";
 import { TagPicker } from "@/components/tags/TagPicker";
 import { TableOfContents } from "@/components/TableOfContents";
+import { DocumentCopyrightNotice } from "@/components/DocumentCopyrightNotice";
 import { useLanguage } from "@/context/LanguageContext";
 import Link from "next/link";
 
@@ -303,6 +304,8 @@ export default function DocumentPage() {
           </ul>
         </div>
       )}
+
+      <DocumentCopyrightNotice />
 
       {confirmingDelete && (
         <ConfirmModal

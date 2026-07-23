@@ -5,6 +5,7 @@ import { signOut } from "next-auth/react";
 import { useLanguage } from "@/context/LanguageContext";
 import { ConfirmModal } from "@/components/ui/ConfirmModal";
 import { PasswordConfirmModal } from "@/components/ui/PasswordConfirmModal";
+import { SiteFooter } from "@/components/SiteFooter";
 
 const ERROR_KEYS: Record<string, string> = {
   incorrect_password: "account.error.incorrectPassword",
@@ -48,6 +49,8 @@ export function AccountSettings({ email, name }: { email: string; name: string |
           {t("account.deleteAccount")}
         </button>
       </div>
+
+      <SiteFooter />
 
       {confirmingStep1 && (
         <ConfirmModal

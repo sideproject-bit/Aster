@@ -10,6 +10,7 @@ import { useDocuments, TagSummary } from "@/context/DocumentsContext";
 import { collectFootnotes } from "@/lib/footnotes";
 import { collectHeadings } from "@/lib/toc";
 import { TableOfContents } from "@/components/TableOfContents";
+import { DocumentCopyrightNotice } from "@/components/DocumentCopyrightNotice";
 import { useLanguage } from "@/context/LanguageContext";
 import Link from "next/link";
 
@@ -198,6 +199,8 @@ export default function ViewDocumentPage() {
           </ul>
         </div>
       )}
+
+      <DocumentCopyrightNotice />
     </div>
   );
 }

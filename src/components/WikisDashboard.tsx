@@ -7,6 +7,7 @@ import Link from "next/link";
 import { PromptModal } from "@/components/ui/PromptModal";
 import { ConfirmModal } from "@/components/ui/ConfirmModal";
 import { CollaboratorsPanel } from "@/components/CollaboratorsPanel";
+import { SiteFooter } from "@/components/SiteFooter";
 import { useLanguage } from "@/context/LanguageContext";
 
 type Wiki = {
@@ -274,6 +275,8 @@ export function WikisDashboard() {
           </ul>
         </div>
       )}
+
+      <SiteFooter />
 
       {creating && (
         <PromptModal

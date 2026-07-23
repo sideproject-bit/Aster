@@ -28,10 +28,17 @@ export async function POST(req: NextRequest) {
     // filesystem there is read-only outside /tmp. That used to surface as a
     // bare 500 with no body, indistinguishable from any other server error.
     console.error("Image upload failed:", err);
-    const message =
-      !process.env.BLOB_READ_WRITE_TOKEN && !process.env.BLOB_STORE_ID
-        ? "image storage is not configured for this deployment (no Blob store connected)"
-        : "could not store the uploaded file";
-    return NextResponse.json({ error: message }, { status: 500 });
+    if (!process.env.BLOB_READ_WRITE_TOKEN && !process.env.BLOB_STORE_ID) {
+      return NextResponse.json(
+        { error: "image storage is not configured for this deployment (no Blob store connected)" },
+        { status: 500 }
+      );
+    }
+    // Surface the underlying reason directly (e.g. @vercel/blob's own
+    // BlobError text) rather than a generic message — figuring out *why*
+    // storage failed previously required digging through Vercel's runtime
+    // logs, which isn't something the person hitting this can always get to.
+    const detail = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: `could not store the uploaded file: ${detail}` }, { status: 500 });
   }
 }
